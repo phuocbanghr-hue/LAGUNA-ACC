@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tiếng Anh Vui - Unit 5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FBF7EC;
+    --ink:#2E2A24;
+
+    /* Grade 2 — Park */
+    --g2-grass:#5C9A4C;
+    --g2-sky:#7FC7E8;
+    --g2-sun:#FFCF56;
+    --g2-bark:#7A4E2D;
+
+    /* Grade 3 — Party */
+    --g3-candy:#F2557A;
+    --g3-gold:#F0A93A;
+    --g3-balloon:#8E5AD9;
+    --g3-mint:#3FBF9E;
+
+    /* Grade 4 — Zoo */
+    --g4-safari:#DB7A2C;
+    --g4-tan:#E3C08C;
+    --g4-jungle:#3C6B4A;
+    --g4-dark:#3B2A20;
+
+    --accent: var(--g2-grass);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Quicksand', sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    background-image:
+      radial-gradient(circle at 8% 15%, rgba(127,199,232,0.18) 0, transparent 40%),
+      radial-gradient(circle at 92% 85%, rgba(242,85,122,0.12) 0, transparent 40%);
+  }
+  h1,h2,h3,.display{font-family:'Baloo 2', sans-serif;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    padding: 64px 24px 40px;
+    text-align:center;
+    overflow:hidden;
+    background: linear-gradient(180deg, #EAF6FF 0%, var(--cream) 100%);
+    border-bottom: 4px dashed rgba(46,42,36,0.15);
+  }
+  .hero h1{
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    margin:0 0 10px;
+    color:#2E2A24;
+    letter-spacing:0.5px;
+  }
+  .hero h1 span{ color: var(--g3-candy); }
+  .hero p.sub{
+    font-size:1.15rem;
+    max-width:560px;
+    margin: 0 auto;
+    color:#5b5548;
+    font-weight:600;
+  }
+  .hero-scene{
+    display:flex;
+    justify-content:center;
+    gap:28px;
+    margin-top:28px;
+    font-size:2.6rem;
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,0.08));
+  }
+  .hero-scene span{ animation: float 3.2s ease-in-out infinite; }
+  .hero-scene span:nth-child(2){ animation-delay:.5s; }
+  .hero-scene span:nth-child(3){ animation-delay:1s; }
+  .hero-scene span:nth-child(4){ animation-delay:1.5s; }
+  @keyframes float{
+    0%,100%{ transform: translateY(0) rotate(0deg); }
+    50%{ transform: translateY(-10px) rotate(-4deg); }
+  }
+
+  .audio-note{
+    display:inline-flex; align-items:center; gap:8px;
+    margin-top:18px; font-size:0.85rem; font-weight:700;
+    color:#5b5548; background:#fff; padding:8px 16px; border-radius:999px;
+    box-shadow:0 3px 0 rgba(0,0,0,0.06);
+  }
+  .audio-note.off{ color:#a34b4b; }
+
+  /* ---------- GRADE NAV ---------- */
+  .grade-nav{
+    position:sticky; top:0; z-index:50;
+    display:flex; justify-content:center; gap:10px;
+    padding:14px 16px;
+    background:rgba(251,247,236,0.92);
+    backdrop-filter: blur(6px);
+    border-bottom:3px solid rgba(46,42,36,0.08);
+    flex-wrap:wrap;
+  }
+  .grade-btn{
+    font-family:'Baloo 2', sans-serif;
+    font-size:1rem;
+    border:3px solid transparent;
+    padding:10px 22px;
+    border-radius:999px;
+    cursor:pointer;
+    background:#fff;
+    color:var(--ink);
+    font-weight:700;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.08);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .grade-btn:hover{ transform: translateY(-2px); }
+  .grade-btn:focus-visible{ outline:3px solid #2E2A24; outline-offset:2px; }
+  .grade-btn.active[data-grade="2"]{ background:var(--g2-grass); color:#fff; border-color:var(--g2-bark);}
+  .grade-btn.active[data-grade="3"]{ background:var(--g3-candy); color:#fff; border-color:var(--g3-balloon);}
+  .grade-btn.active[data-grade="4"]{ background:var(--g4-safari); color:#fff; border-color:var(--g4-dark);}
+
+  /* ---------- GRADE SECTIONS ---------- */
+  .grade-section{ display:none; padding: 30px 18px 70px; max-width:1000px; margin:0 auto; }
+  .grade-section.visible{ display:block; animation: fadeUp .4s ease; }
+  @keyframes fadeUp{ from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);} }
+
+  .unit-banner{
+    text-align:center;
+    border-radius:24px;
+    padding: 22px 20px;
+    margin-bottom: 34px;
+    color:#fff;
+  }
+  .unit-banner .eyebrow{
+    text-transform:uppercase;
+    letter-spacing:2px;
+    font-size:0.78rem;
+    font-weight:700;
+    opacity:0.9;
+  }
+  .unit-banner h2{ margin:6px 0 0; font-size:1.7rem; }
+  #g2 .unit-banner{ background: linear-gradient(120deg, var(--g2-grass), var(--g2-sky)); }
+  #g3 .unit-banner{ background: linear-gradient(120deg, var(--g3-candy), var(--g3-gold)); }
+  #g4 .unit-banner{ background: linear-gradient(120deg, var(--g4-safari), var(--g4-jungle)); }
+
+  .block-title{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    font-size:1.3rem; margin: 40px 0 16px;
+  }
+  .block-title .num{
+    font-family:'Baloo 2', sans-serif;
+    width:34px;height:34px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    color:#fff; font-size:1rem; flex-shrink:0;
+  }
+  #g2 .num{ background:var(--g2-grass); }
+  #g3 .num{ background:var(--g3-candy); }
+  #g4 .num{ background:var(--g4-safari); }
+
+  .progress-pill{
+    font-family:'Quicksand',sans-serif;
+    font-size:0.8rem; font-weight:700;
+    background:#fff; border-radius:999px; padding:5px 14px;
+    box-shadow:0 2px 0 rgba(0,0,0,0.06);
+    color:#5b5548;
+  }
+  .progress-pill b{ color:var(--ink); }
+
+  /* ---------- VOCAB CARDS ---------- */
+  .vocab-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px,1fr));
+    gap:14px;
+  }
+  .flip-card{ perspective:1000px; height:130px; cursor:pointer; }
+  .flip-card.learned .flip-front{ box-shadow: 0 0 0 3px var(--accent), 0 4px 0 rgba(0,0,0,0.08); }
+  .flip-inner{
+    position:relative; width:100%; height:100%;
+    transition: transform .5s;
+    transform-style:preserve-3d;
+  }
+  .flip-card.flipped .flip-inner{ transform: rotateY(180deg); }
+  .flip-front, .flip-back{
+    position:absolute; inset:0;
+    border-radius:16px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    backface-visibility:hidden;
+    padding:8px;
+    text-align:center;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.08);
+    border:2px solid rgba(0,0,0,0.06);
+  }
+  .flip-front{ background:#fff; position:relative; }
+  .flip-front .emoji{ font-size:2.1rem; margin-bottom:6px; }
+  .flip-front .word{ font-weight:700; font-family:'Baloo 2',sans-serif; }
+  .flip-back{ transform: rotateY(180deg); color:#fff; font-weight:700; font-family:'Baloo 2',sans-serif; font-size:1.05rem;}
+  #g2 .flip-back{ background:var(--g2-grass); }
+  #g3 .flip-back{ background:var(--g3-candy); }
+  #g4 .flip-back{ background:var(--g4-safari); }
+  .hint{ font-size:0.78rem; color:#8a8171; text-align:center; margin-top:8px; }
+
+  /* ---------- AUDIO BUTTONS ---------- */
+  .say-btn{
+    position:absolute; top:4px; right:4px;
+    border:none; background:rgba(0,0,0,0.06); color:inherit;
+    width:26px; height:26px; border-radius:50%; cursor:pointer;
+    font-size:0.9rem; display:flex; align-items:center; justify-content:center;
+    line-height:1; z-index:2; transition: transform .15s, background .15s;
+  }
+  .say-btn:hover{ background:rgba(0,0,0,0.14); transform:scale(1.12); }
+  .say-btn:active{ transform:scale(0.94); }
+  .say-btn.speaking{ background:var(--g2-sun); animation:pulse .5s ease infinite; }
+  @keyframes pulse{ 0%,100%{transform:scale(1);} 50%{transform:scale(1.15);} }
+  .say-inline{
+    border:none; background:rgba(0,0,0,0.06); cursor:pointer; font-size:0.85rem;
+    vertical-align:middle; margin-left:6px; width:24px; height:24px; border-radius:50%;
+    display:inline-flex; align-items:center; justify-content:center;
+  }
+  .say-inline:hover{ background:rgba(0,0,0,0.14); }
+
+  /* ---------- PREPOSITIONS (grade 2 signature) ---------- */
+  .park-game{
+    background:#fff; border-radius:22px; padding:22px;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.06);
+  }
+  .park-stage{
+    position:relative; height:230px; border-radius:16px;
+    background: linear-gradient(180deg, var(--g2-sky) 0%, var(--g2-sky) 55%, var(--g2-grass) 55%, var(--g2-grass) 100%);
+    overflow:hidden; margin-bottom:16px;
+  }
+  .park-stage .cloud{ position:absolute; top:14px; font-size:1.6rem; opacity:0.8; }
+  .park-stage .tree{ position:absolute; bottom:10px; left:8%; font-size:3.4rem; }
+  .park-stage .seesaw{ position:absolute; bottom:20px; left:42%; font-size:3rem; }
+  .park-stage .slide{ position:absolute; bottom:10px; right:8%; font-size:3.4rem; }
+  .park-ball{
+    position:absolute; font-size:1.8rem; transition: all .5s ease;
+  }
+  .park-controls{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+  .park-controls button{
+    font-family:'Baloo 2',sans-serif; font-weight:700;
+    border:none; border-radius:12px; padding:10px 18px; cursor:pointer;
+    background: var(--g2-sun); color:#5a3d00;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.1);
+  }
+  .park-controls button:hover{ filter:brightness(1.05); }
+  .park-controls button.active{ outline:3px solid var(--g2-bark); }
+  .park-question{ text-align:center; font-weight:700; margin-bottom:12px; font-family:'Baloo 2',sans-serif; }
+
+  /* ---------- PHONICS ---------- */
+  .phonics-row{ margin-bottom:14px; display:flex; align-items:center; flex-wrap:wrap; gap:6px; }
+  .phonics-sound{
+    display:inline-flex; align-items:center; gap:8px; font-family:'Baloo 2',sans-serif;
+    font-weight:800; font-size:1.05rem;
+    padding:6px 14px; border-radius:10px; color:#fff; margin-right:10px;
+  }
+  .phonics-sound .say-inline{ background:rgba(255,255,255,0.25); }
+  .phonics-sound .say-inline:hover{ background:rgba(255,255,255,0.45); }
+  #g2 .phonics-sound{ background:var(--g2-bark); }
+  #g3 .phonics-sound{ background:var(--g3-balloon); }
+  #g4 .phonics-sound{ background:var(--g4-jungle); }
+  .phonics-chips{ display:inline-flex; gap:8px; flex-wrap:wrap; vertical-align:middle; }
+  .chip{
+    background:#fff; border:2px solid rgba(0,0,0,0.08);
+    padding:6px 12px; border-radius:999px; font-weight:600;
+    cursor:pointer; transition: transform .15s;
+  }
+  .chip:hover{ transform: scale(1.06); }
+  .chip.on{ color:#fff; border-color:transparent; }
+  #g2 .chip.on{ background:var(--g2-grass); }
+  #g3 .chip.on{ background:var(--g3-candy); }
+  #g4 .chip.on{ background:var(--g4-safari); }
+
+  /* ---------- STRUCTURE ---------- */
+  .structure-card{
+    background:#fff; border-radius:18px; padding:20px 22px; margin-bottom:16px;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.05);
+  }
+  .qa-line{ margin:6px 0; font-weight:600; }
+  .qa-line .tag{
+    display:inline-block; font-size:0.72rem; font-weight:800;
+    padding:2px 8px; border-radius:6px; margin-right:8px; color:#fff;
+    font-family:'Baloo 2',sans-serif;
+  }
+  #g2 .tag.q{ background:var(--g2-sky); color:#0b3550; }
+  #g2 .tag.a{ background:var(--g2-grass); }
+  #g3 .tag.q{ background:var(--g3-gold); color:#5a3d00; }
+  #g3 .tag.a{ background:var(--g3-candy); }
+  #g4 .tag.q{ background:var(--g4-tan); color:#4a2f10; }
+  #g4 .tag.a{ background:var(--g4-safari); }
+
+  /* mini quiz */
+  .quiz-box{ background:#fff; border-radius:18px; padding:20px 22px; box-shadow: 0 4px 0 rgba(0,0,0,0.05);}
+  .quiz-q{ font-weight:700; margin-bottom:10px; }
+  .quiz-opts{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:8px;}
+  .quiz-opts button{
+    border:2px solid rgba(0,0,0,0.1); background:#fdfbf6; border-radius:12px;
+    padding:9px 16px; cursor:pointer; font-weight:600; font-family:'Quicksand',sans-serif;
+  }
+  .quiz-opts button.correct{ background:#c9e9c0; border-color:#5C9A4C; }
+  .quiz-opts button.wrong{ background:#f6c8c8; border-color:#c9504f; }
+  .quiz-feedback{ font-weight:700; min-height:1.2em; }
+
+  /* toggle for typing forms (grade 3) */
+  .toggle-wrap{ display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
+  .toggle-wrap button{
+    border:2px solid var(--g3-balloon); background:#fff; color:var(--g3-balloon);
+    padding:8px 16px; border-radius:999px; font-weight:700; cursor:pointer;
+  }
+  .toggle-wrap button.active{ background:var(--g3-balloon); color:#fff; }
+  .toggle-wrap.small button{ padding:6px 14px; font-size:0.9rem; }
+
+  /* ---------- PARTY STAGE (grade 3 signature) ---------- */
+  .party-stage{
+    position:relative; height:230px; border-radius:16px;
+    background: linear-gradient(180deg, var(--g3-gold) 0%, var(--g3-gold) 42%, var(--g3-mint) 42%, var(--g3-mint) 100%);
+    overflow:hidden; margin-bottom:16px;
+  }
+  .party-stage .deco{ position:absolute; font-size:1.6rem; opacity:0.85; }
+  .party-item{
+    position:absolute; font-size:2rem; cursor:pointer; background:none; border:none;
+    transition: transform .2s ease; filter: drop-shadow(0 3px 3px rgba(0,0,0,0.15));
+  }
+  .party-item:hover{ transform: scale(1.15); }
+  .party-item.selected{ transform: scale(1.25); filter: drop-shadow(0 0 0 3px rgba(255,255,255,0.9)) drop-shadow(0 3px 3px rgba(0,0,0,0.2)); }
+  .party-item.selected::after{
+    content:'✨'; position:absolute; top:-14px; right:-10px; font-size:1rem;
+  }
+  .speech-bubble{
+    background:#fff; border-radius:16px; padding:14px 18px; font-weight:700;
+    text-align:center; box-shadow:0 4px 0 rgba(0,0,0,0.06); min-height:1.4em;
+    display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap;
+  }
+
+  /* ---------- ZOO STAGE (grade 4 signature) ---------- */
+  .zoo-stage{
+    position:relative; height:230px; border-radius:16px;
+    background: linear-gradient(180deg, #F6C87A 0%, #F6C87A 45%, var(--g4-tan) 45%, var(--g4-tan) 100%);
+    overflow:hidden; margin-bottom:16px;
+  }
+  .zoo-stage .pond{
+    position:absolute; bottom:8px; right:6%; width:120px; height:46px; border-radius:50%;
+    background: #7EC8E3; opacity:0.85;
+  }
+  .zoo-item{
+    position:absolute; font-size:2.2rem; cursor:pointer; background:none; border:none;
+    transition: transform .2s ease; filter: drop-shadow(0 3px 3px rgba(0,0,0,0.15));
+  }
+  .zoo-item:hover{ transform: scale(1.15); }
+  .zoo-item.selected{ transform: scale(1.25); }
+  .zoo-item.selected::after{ content:'❓'; position:absolute; top:-16px; left:50%; transform:translateX(-50%); font-size:1rem; }
+
+  .score-pill{
+    display:inline-block; margin-top:10px; font-weight:700; font-family:'Baloo 2',sans-serif;
+    background:#fff; padding:6px 16px; border-radius:999px; box-shadow:0 3px 0 rgba(0,0,0,0.06);
+  }
+
+  footer{ text-align:center; padding: 30px; color:#8a8171; font-size:0.85rem; }
+
+  @media (prefers-reduced-motion: reduce){
+    .hero-scene span{ animation:none; }
+    .flip-inner{ transition:none; }
+    .say-btn.speaking{ animation:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <p class="eyebrow" style="font-weight:700;color:#8a8171;letter-spacing:2px;text-transform:uppercase;font-size:0.8rem;">Family and Friends · Unit 5</p>
+  <h1>Học Tiếng Anh <span>Vui Vẻ</span> 🎈</h1>
+  <p class="sub">Chọn lớp học của em để bắt đầu khám phá từ vựng, ngữ âm và mẫu câu nhé!</p>
+  <div class="hero-scene">
+    <span>🛝</span><span>🎁</span><span>🐒</span><span>⚽</span>
+  </div>
+  <div><span class="audio-note" id="audio-status">🔊 Bấm vào thẻ từ vựng hoặc icon loa để nghe phát âm chuẩn!</span></div>
+</div>
+
+<nav class="grade-nav">
+  <button class="grade-btn active" data-grade="2">Lớp 2 · Where's the ball?</button>
+  <button class="grade-btn" data-grade="3">Lớp 3 · Let's buy presents!</button>
+  <button class="grade-btn" data-grade="4">Lớp 4 · A funny monkey!</button>
+</nav>
+
+<!-- ================= GRADE 2 ================= -->
+<section class="grade-section visible" id="g2">
+  <div class="unit-banner">
+    <div class="eyebrow">Lớp 2 · Unit 5</div>
+    <h2>Where's the Ball? 🌳🛝</h2>
+  </div>
+
+  <div class="block-title"><span class="num">1</span> Từ vựng — Công viên <span class="progress-pill">Đã nghe: <b id="g2-progress-count">0</b>/8 🔊</span></div>
+  <div class="vocab-grid" id="g2-vocab"></div>
+  <p class="hint">👉 Bấm vào thẻ để lật &amp; tự động nghe phát âm, hoặc bấm icon 🔊 riêng</p>
+
+  <div class="block-title"><span class="num">2</span> Ngữ âm — Âm đầu</div>
+  <div id="g2-phonics"></div>
+
+  <div class="block-title"><span class="num">3</span> Cấu trúc — Hỏi vị trí đồ vật</div>
+  <div class="structure-card">
+    <p class="qa-line"><span class="tag q">Hỏi</span> Where is the <em>ball</em>? <button class="say-inline" data-say="Where is the ball?" aria-label="Nghe câu hỏi">🔊</button></p>
+    <p class="qa-line"><span class="tag a">Đáp</span> It is under / on / in the ... <button class="say-inline" data-say="It is under the tree." aria-label="Nghe câu trả lời">🔊</button></p>
+  </div>
+
+  <p class="park-question">🔍 Quả bóng đang ở đâu? Bấm nút để tìm bóng, nghe câu trả lời và xem hoạt hình nhé!</p>
+  <div class="park-game">
+    <div class="park-stage">
+      <span class="cloud" style="left:10%;">☁️</span>
+      <span class="cloud" style="right:12%; top:26px;">☁️</span>
+      <span class="tree">🌳</span>
+      <span class="seesaw">🎡</span>
+      <span class="slide">🛝</span>
+      <span class="park-ball" id="park-ball" style="bottom:20px; left:48%;">⚽</span>
+    </div>
+    <div class="park-controls">
+      <button data-pos="under-seesaw">Under the seesaw</button>
+      <button data-pos="on-slide">On the slide</button>
+      <button data-pos="in-tree">In the tree</button>
+    </div>
+    <p class="quiz-feedback" id="park-feedback" style="text-align:center;margin-top:10px;"></p>
+  </div>
+</section>
+
+<!-- ================= GRADE 3 ================= -->
+<section class="grade-section" id="g3">
+  <div class="unit-banner">
+    <div class="eyebrow">Lớp 3 · Unit 5</div>
+    <h2>Let's Buy Presents! 🎁🎂</h2>
+  </div>
+
+  <div class="block-title"><span class="num">1</span> Từ vựng — Bữa tiệc &amp; quà tặng <span class="progress-pill">Đã nghe: <b id="g3-progress-count">0</b>/8 🔊</span></div>
+  <div class="vocab-grid" id="g3-vocab"></div>
+  <p class="hint">👉 Bấm vào thẻ để lật &amp; tự động nghe phát âm, hoặc bấm icon 🔊 riêng</p>
+
+  <div class="block-title"><span class="num">2</span> Ngữ âm — Tổ hợp phụ âm đầu</div>
+  <div id="g3-phonics"></div>
+
+  <div class="block-title"><span class="num">3</span> Cấu trúc — Nói về sở thích</div>
+
+  <div class="toggle-wrap">
+    <span style="font-weight:700;">Xem dạng:</span>
+    <button class="toggle-active-form active" data-form="full">Đầy đủ</button>
+    <button class="toggle-active-form" data-form="short">Viết tắt</button>
+  </div>
+
+  <div class="structure-card">
+    <p class="qa-line"><span class="tag q">Hỏi (bạn)</span> What do you like? <button class="say-inline" data-say="What do you like?" aria-label="Nghe câu hỏi">🔊</button></p>
+    <p class="qa-line"><span class="tag a">Đáp</span> I like candy. / I <span class="form-full">do not</span><span class="form-short" style="display:none;">don't</span> like nuts. <button class="say-inline" data-say="I like candy. I don't like nuts." aria-label="Nghe câu trả lời">🔊</button></p>
+    <p class="qa-line" style="margin-top:12px;"><span class="tag q">Hỏi (người khác)</span> What does he/she like? <button class="say-inline" data-say="What does he like? What does she like?" aria-label="Nghe câu hỏi">🔊</button></p>
+    <p class="qa-line"><span class="tag a">Đáp</span> He/She likes cake. / She <span class="form-full">does not</span><span class="form-short" style="display:none;">doesn't</span> like balloons. <button class="say-inline" data-say="He likes cake. She doesn't like balloons." aria-label="Nghe câu trả lời">🔊</button></p>
+  </div>
+
+  <div class="block-title" style="margin-top:26px;">🎉 Ai đang nói? Cùng khám phá bàn tiệc!</div>
+  <p class="park-question">🔍 Chọn nhân vật, chọn thích/không thích, rồi bấm vào một món trên bàn tiệc để nghe câu đúng!</p>
+  <div class="park-game">
+    <div class="toggle-wrap small" id="g3-person-toggle">
+      <span style="font-weight:700;">Ai nói:</span>
+      <button class="person-btn active" data-person="I" data-verb="like" data-neg="don't like">Em (I)</button>
+      <button class="person-btn" data-person="He" data-verb="likes" data-neg="doesn't like">Peter (He)</button>
+      <button class="person-btn" data-person="She" data-verb="likes" data-neg="doesn't like">Linda (She)</button>
+    </div>
+    <div class="toggle-wrap small" id="g3-mood-toggle">
+      <span style="font-weight:700;">Cảm xúc:</span>
+      <button class="mood-btn active" data-mood="pos">👍 Thích</button>
+      <button class="mood-btn" data-mood="neg">👎 Không thích</button>
+    </div>
+    <div class="party-stage" id="g3-stage">
+      <span class="deco" style="top:10px; left:8%;">🎈</span>
+      <span class="deco" style="top:18px; right:10%;">🎈</span>
+      <span class="deco" style="top:6px; left:46%; font-size:1.2rem;">✨</span>
+      <button class="party-item" data-word="candy" style="bottom:26px; left:6%;">🍬</button>
+      <button class="party-item" data-word="cake" style="bottom:30px; left:44%; font-size:2.6rem;">🎂</button>
+      <button class="party-item" data-word="balloons" style="bottom:120px; right:32%;">🎈</button>
+      <button class="party-item" data-word="the card" style="bottom:26px; right:26%;">💌</button>
+      <button class="party-item" data-word="nuts" style="bottom:26px; right:6%;">🥜</button>
+      <button class="party-item" data-word="the tie" style="bottom:120px; left:16%;">👔</button>
+    </div>
+    <div class="speech-bubble" id="g3-feedback">Bấm vào một món quà phía trên nhé!</div>
+  </div>
+</section>
+
+<!-- ================= GRADE 4 ================= -->
+<section class="grade-section" id="g4">
+  <div class="unit-banner">
+    <div class="eyebrow">Lớp 4 · Unit 5</div>
+    <h2>A Funny Monkey! 🐒🦓</h2>
+  </div>
+
+  <div class="block-title"><span class="num">1</span> Từ vựng — Vườn thú &amp; tính từ <span class="progress-pill">Đã nghe: <b id="g4-progress-count">0</b>/12 🔊</span></div>
+  <div class="vocab-grid" id="g4-vocab"></div>
+  <p class="hint">👉 Bấm vào thẻ để lật &amp; tự động nghe phát âm, hoặc bấm icon 🔊 riêng</p>
+
+  <div class="block-title"><span class="num">2</span> Ngữ âm — Âm /ɔɪ/</div>
+  <div id="g4-phonics"></div>
+
+  <div class="block-title"><span class="num">3</span> Cấu trúc — Thì hiện tại tiếp diễn (câu hỏi)</div>
+  <div class="structure-card">
+    <p class="qa-line"><span class="tag q">You</span> Are you jumping? → Yes, I am. / No, I'm not. <button class="say-inline" data-say="Are you jumping? Yes, I am. No, I'm not." aria-label="Nghe">🔊</button></p>
+    <p class="qa-line"><span class="tag q">He/She/It</span> Is it running? → Yes, it is. / No, it isn't. <button class="say-inline" data-say="Is it running? Yes, it is. No, it isn't." aria-label="Nghe">🔊</button></p>
+    <p class="qa-line"><span class="tag q">They</span> Are they playing? → Yes, they are. / No, they aren't. <button class="say-inline" data-say="Are they playing? Yes, they are. No, they aren't." aria-label="Nghe">🔊</button></p>
+    <p class="qa-line" style="margin-top:10px;">💬 Dấu ngoặc kép: <em>"Don't move," says the mouse.</em> <button class="say-inline" data-say="Don't move, says the mouse." aria-label="Nghe">🔊</button></p>
+  </div>
+
+  <div class="block-title">🐵 Con vật đang làm gì?</div>
+  <div class="park-game">
+    <p class="quiz-q" id="g4-question" style="text-align:center;"></p>
+    <div class="quiz-opts" id="g4-options" style="justify-content:center;"></div>
+    <p class="quiz-feedback" id="g4-feedback" style="text-align:center;"></p>
+    <div style="text-align:center;">
+      <span class="score-pill">⭐ Điểm: <span id="g4-score">0</span>/<span id="g4-total">0</span></span>
+    </div>
+    <div style="text-align:center;">
+      <button id="g4-next" style="margin-top:6px;border:none;background:var(--g4-jungle);color:#fff;padding:8px 18px;border-radius:999px;font-weight:700;cursor:pointer;font-family:'Baloo 2',sans-serif;">Câu tiếp theo →</button>
+    </div>
+  </div>
+</section>
+
+<footer>Tiếng Anh Vui · Unit 5 practice · Made for lớp 2, 3 &amp; 4 🌟</footer>
+
+<script>
+// ---------- helpers ----------
+function el(tag, cls, html){ const e=document.createElement(tag); if(cls) e.className=cls; if(html!==undefined) e.innerHTML=html; return e; }
+function stripEmoji(s){ return s.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{FE0F}\u{2B00}-\u{2BFF}]/gu,'').replace(/\s+/g,' ').trim(); }
+
+// ---------- Text-to-speech engine ----------
+const AudioEngine = (function(){
+  const supported = ('speechSynthesis' in window);
+  let voices = [];
+  let bestVoice = null;
+
+  function pickVoice(){
+    voices = window.speechSynthesis.getVoices();
+    bestVoice =
+      voices.find(v => v.lang === 'en-US' && /female|Samantha|Zira|Aria/i.test(v.name)) ||
+      voices.find(v => v.lang === 'en-US') ||
+      voices.find(v => v.lang && v.lang.startsWith('en-GB')) ||
+      voices.find(v => v.lang && v.lang.startsWith('en')) ||
+      null;
+  }
+
+  if(supported){
+    pickVoice();
+    window.speechSynthesis.onvoiceschanged = pickVoice;
+  } else {
+    const note = document.getElementById('audio-status');
+    if(note){
+      note.textContent = '🔇 Trình duyệt này chưa hỗ trợ đọc từ vựng — hãy thử Chrome hoặc Safari mới nhất.';
+      note.classList.add('off');
+    }
+  }
+
+  function speak(text, opts){
+    if(!supported || !text) return;
+    opts = opts || {};
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US';
+    utter.rate = opts.rate || 0.82;
+    utter.pitch = opts.pitch || 1.05;
+    if(bestVoice) utter.voice = bestVoice;
+    if(opts.onstart) utter.onstart = opts.onstart;
+    if(opts.onend) utter.onend = opts.onend;
+    window.speechSynthesis.speak(utter);
+  }
+
+  return { speak, isSupported: () => supported };
+})();
+
+// convenience wrapper that also gives a little visual "speaking" pulse to a button
+function speakWithButton(text, btn){
+  AudioEngine.speak(text, {
+    onstart: () => btn && btn.classList.add('speaking'),
+    onend: () => btn && btn.classList.remove('speaking')
+  });
+}
+
+// ---------- Grade nav ----------
+const gradeBtns = document.querySelectorAll('.grade-btn');
+gradeBtns.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    gradeBtns.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.grade-section').forEach(s=>s.classList.remove('visible'));
+    document.getElementById('g'+btn.dataset.grade).classList.add('visible');
+    if(window.speechSynthesis) window.speechSynthesis.cancel();
+  });
+});
+
+// ---------- Vocab data ----------
+const vocab2 = [
+  ['🎡','seesaw','bập bênh'], ['🛝','slide','cầu trượt'], ['🥅','goal','khung thành'],
+  ['🌳','tree','cái cây'], ['🏊','pool','bể bơi'], ['🍦','ice cream','kem'],
+  ['🥏','frisbee','đĩa ném'], ['🌿','park','công viên']
+];
+const vocab3 = [
+  ['🍬','candy','kẹo'], ['🎈','balloon','bóng bay'], ['🎁','present','quà'],
+  ['🎂','cake','bánh kem'], ['💌','card','thiệp'], ['🥜','nuts','các loại hạt'],
+  ['👔','tie','cà vạt'], ['🧑‍🤝‍🧑','neighbor','hàng xóm']
+];
+const vocab4 = [
+  ['🐧','penguin','chim cánh cụt'], ['🦓','zebra','ngựa vằn'], ['🐒','monkey','khỉ'],
+  ['🦘','kangaroo','chuột túi'], ['🐫','camel','lạc đà'], ['🦎','lizard','thằn lằn'],
+  ['🐊','crocodile','cá sấu'], ['😂','funny','hài hước'], ['😨','scared','sợ hãi'],
+  ['🕊️','free','tự do'], ['🙏','sorry','xin lỗi'], ['💛','kind','tốt bụng']
+];
+
+function renderVocab(containerId, data, gradeKey){
+  const c = document.getElementById(containerId);
+  const heard = new Set();
+  const counter = document.getElementById(gradeKey+'-progress-count');
+  function markHeard(word){
+    if(!heard.has(word)){
+      heard.add(word);
+      if(counter) counter.textContent = heard.size;
+    }
+  }
+  data.forEach(([emoji,word,meaning])=>{
+    const card = el('div','flip-card');
+    card.innerHTML = `<div class="flip-inner">
+      <div class="flip-front">
+        <button class="say-btn" type="button" aria-label="Nghe phát âm ${word}">🔊</button>
+        <div class="emoji">${emoji}</div><div class="word">${word}</div>
+      </div>
+      <div class="flip-back">${meaning}</div>
+    </div>`;
+    const sayBtn = card.querySelector('.say-btn');
+    sayBtn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      speakWithButton(word, sayBtn);
+      markHeard(word);
+      card.classList.add('learned');
+    });
+    card.addEventListener('click', ()=>{
+      card.classList.toggle('flipped');
+      speakWithButton(word, sayBtn);
+      markHeard(word);
+      card.classList.add('learned');
+    });
+    c.appendChild(card);
+  });
+}
+renderVocab('g2-vocab', vocab2, 'g2');
+renderVocab('g3-vocab', vocab3, 'g3');
+renderVocab('g4-vocab', vocab4, 'g4');
+
+// ---------- Phonics ----------
+const phonics2 = [
+  ['/kw/', ['queen 👸']],
+  ['/r/', ['rabbit 🐰']],
+  ['/s/', ['sofa 🛋️']],
+  ['/t/', ['tiger 🐯']],
+  ['/ʌ/', ['umbrella ☂️']]
+];
+const phonics3 = [
+  ['/cl/', ['cloud ☁️','clock 🕰️']],
+  ['/gl/', ['gloves 🧤','glue 🧴']],
+  ['/sl/', ['slide 🛝','slippers 🥿']]
+];
+const phonics4 = [
+  ['/ɔɪ/', ['boy 👦','toy 🧸','oyster 🦪','coin 🪙','oil 🛢️','soil 🟤']]
+];
+function renderPhonics(containerId, data){
+  const c = document.getElementById(containerId);
+  data.forEach(([sound, words])=>{
+    const row = el('div','phonics-row');
+    const soundLabel = el('span','phonics-sound');
+    const soundText = document.createTextNode(sound+' ');
+    soundLabel.appendChild(soundText);
+    const soundBtn = el('button','say-inline','🔊');
+    soundBtn.type = 'button';
+    soundBtn.setAttribute('aria-label','Nghe âm '+sound);
+    soundBtn.addEventListener('click', ()=> speakWithButton(stripEmoji(words[0]), soundBtn));
+    soundLabel.appendChild(soundBtn);
+    row.appendChild(soundLabel);
+    const chipWrap = el('span','phonics-chips');
+    words.forEach(w=>{
+      const clean = stripEmoji(w);
+      const chip = el('span','chip', w);
+      chip.addEventListener('click', ()=>{
+        chip.classList.toggle('on');
+        speakWithButton(clean, chip);
+      });
+      chipWrap.appendChild(chip);
+    });
+    row.appendChild(chipWrap);
+    c.appendChild(row);
+  });
+}
+renderPhonics('g2-phonics', phonics2);
+renderPhonics('g3-phonics', phonics3);
+renderPhonics('g4-phonics', phonics4);
+
+// ---------- Say-inline buttons in structure cards ----------
+document.querySelectorAll('.say-inline[data-say]').forEach(b=>{
+  b.addEventListener('click', ()=> speakWithButton(b.dataset.say, b));
+});
+
+// ---------- Grade 2 park game ----------
+const ball = document.getElementById('park-ball');
+const positions = {
+  'under-seesaw': { style:'bottom:6px; left:44%;', text:'It is under the seesaw.' },
+  'on-slide': { style:'bottom:70px; right:11%;', text:'It is on the slide.' },
+  'in-tree': { style:'bottom:110px; left:11%;', text:'It is in the tree.' }
+};
+document.querySelectorAll('.park-controls button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.park-controls button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const pos = positions[btn.dataset.pos];
+    ball.setAttribute('style', 'position:absolute;font-size:1.8rem;transition:all .5s ease;' + pos.style);
+    document.getElementById('park-feedback').textContent = pos.text;
+    speakWithButton(pos.text, btn);
+  });
+});
+
+// ---------- Grade 3 party stage ----------
+const g3State = { person:'I', verb:'like', neg:"don't like", mood:'pos' };
+document.querySelectorAll('.person-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.person-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    g3State.person = btn.dataset.person;
+    g3State.verb = btn.dataset.verb;
+    g3State.neg = btn.dataset.neg;
+  });
+});
+document.querySelectorAll('.mood-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    g3State.mood = btn.dataset.mood;
+  });
+});
+document.querySelectorAll('.party-item').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.party-item').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+    const word = btn.dataset.word;
+    const verbPhrase = g3State.mood === 'pos' ? g3State.verb : g3State.neg;
+    const sentence = `${g3State.person} ${verbPhrase} ${word}.`;
+    const bubble = document.getElementById('g3-feedback');
+    bubble.innerHTML = `<span>${sentence}</span>`;
+    const bubbleBtn = el('button','say-inline','🔊');
+    bubbleBtn.type = 'button';
+    bubbleBtn.addEventListener('click', ()=> speakWithButton(sentence, bubbleBtn));
+    bubble.appendChild(bubbleBtn);
+    speakWithButton(sentence, bubbleBtn);
+  });
+});
+
+// ---------- Grade 4 quiz ----------
+const g4Questions = [
+  { q:'The monkey is jumping.', ask:'Is it jumping?', correct:'Yes, it is.', options:['Yes, it is.','No, it isn\'t.'] },
+  { q:'The zebras are sleeping (not running).', ask:'Are they running?', correct:"No, they aren't.", options:['Yes, they are.',"No, they aren't."] },
+  { q:'You are eating ice cream.', ask:'Are you eating?', correct:'Yes, I am.', options:['Yes, I am.',"No, I'm not."] },
+  { q:'The crocodile is not smiling.', ask:'Is it smiling?', correct:"No, it isn't.", options:["No, it isn't.",'Yes, it is.'] }
+];
+let g4idx = 0;
+let g4score = 0;
+let g4total = 0;
+function loadG4(){
+  const item = g4Questions[g4idx % g4Questions.length];
+  const qEl = document.getElementById('g4-question');
+  qEl.innerHTML = '';
+  qEl.appendChild(document.createTextNode(item.q));
+  qEl.appendChild(document.createElement('br'));
+  const askEm = document.createElement('em');
+  askEm.textContent = item.ask;
+  qEl.appendChild(askEm);
+  const qBtn = el('button','say-inline','🔊');
+  qBtn.type = 'button';
+  qBtn.addEventListener('click', ()=> speakWithButton(item.q+' '+item.ask, qBtn));
+  qEl.appendChild(qBtn);
+
+  const optWrap = document.getElementById('g4-options');
+  optWrap.innerHTML = '';
+  document.getElementById('g4-feedback').textContent='';
+  item.options.forEach(opt=>{
+    const b = el('button', null, opt);
+    b.addEventListener('click', ()=>{
+      optWrap.querySelectorAll('button').forEach(x=>x.disabled=true);
+      g4total++;
+      if(opt === item.correct){
+        b.classList.add('correct');
+        document.getElementById('g4-feedback').textContent = '🎉 Đúng rồi!';
+        g4score++;
+        speakWithButton(opt, b);
+      } else {
+        b.classList.add('wrong');
+        document.getElementById('g4-feedback').textContent = '🤔 Chưa đúng — đáp án là: '+item.correct;
+        speakWithButton(item.correct, b);
+      }
+      document.getElementById('g4-score').textContent = g4score;
+      document.getElementById('g4-total').textContent = g4total;
+    });
+    optWrap.appendChild(b);
+  });
+}
+document.getElementById('g4-next').addEventListener('click', ()=>{
+  g4idx++;
+  loadG4();
+});
+loadG4();
+</script>
+</body>
+</html>
