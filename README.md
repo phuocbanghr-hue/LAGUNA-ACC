@@ -5,7 +5,7 @@
 - `firebase.json`, `.firebaserc`: trỏ tới dự án `laguna-acc`.
 - `functions/.env.laguna-acc`: **cần sửa `GMAIL_USER`** thành Gmail dùng để gửi thư nhắc.
 
-## Các bước (chạy trong thư mục laguna-deploy)
+## Các bước (chạy trong thư mục gốc của repo, nơi có firebase.json)
 
 1. Cài công cụ và đăng nhập
    ```
