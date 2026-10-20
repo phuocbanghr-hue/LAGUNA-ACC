@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quản lý đặt cọc hợp đồng · Laguna Lăng Cô</title>
+<style>
+:root{--p:#00a19a;--p2:#0b7d78;--pk:#e5007e;--bg:#f2f6f6;--card:#fff;--tx:#1d2a2a;--mut:#6b7a7a;--bd:#e2eaea;--red:#e04848;--amb:#f0a020;--grn:#27a467;--gry:#8a9696}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1716;--card:#172120;--tx:#e6efee;--mut:#8ea3a1;--bd:#263736}}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--tx);font-size:14px}
+.hidden{display:none!important}
+header{background:var(--card);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:5}
+.top{display:flex;align-items:center;gap:14px;padding:10px 24px;flex-wrap:wrap}
+.top img{height:40px}
+.top h1{font-size:17px;margin:0;flex:1;font-weight:650}
+.top .who{color:var(--mut);font-size:13px}
+nav{display:flex;gap:4px;padding:0 24px;overflow-x:auto}
+nav button{background:none;color:var(--mut);border:none;border-bottom:3px solid transparent;padding:10px 14px;cursor:pointer;font:inherit;font-weight:600;white-space:nowrap}
+nav button.on{color:var(--p);border-bottom-color:var(--p)}
+main{padding:22px 24px;max-width:1360px;margin:auto}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:18px}
+.kpi{background:linear-gradient(135deg,var(--card),var(--card));border:1px solid var(--bd);border-radius:14px;padding:16px;position:relative;overflow:hidden}
+.kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--p)}
+.kpi.warn:before{background:var(--red)}.kpi.ok:before{background:var(--grn)}
+.kpi span{color:var(--mut);font-size:12.5px}
+.kpi b{display:block;font-size:22px;margin:4px 0 2px;font-weight:700}
+.kpi small{color:var(--mut)}
+.grid2{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:14px;min-width:0}
+.panel h3{margin:0 0 12px;font-size:15px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.toolbar .grow{flex:1;min-width:200px}
+input,select,textarea,button{font:inherit}
+input,select,textarea{padding:9px 11px;border:1px solid var(--bd);border-radius:9px;background:var(--card);color:var(--tx);width:100%}
+textarea{resize:vertical}
+select{width:auto}
+.btn{background:var(--p);color:#fff;border:none;border-radius:9px;padding:9px 14px;cursor:pointer;font-weight:600;white-space:nowrap}
+.btn:hover{filter:brightness(.95)}
+.btn.ghost{background:transparent;color:var(--tx);border:1px solid var(--bd)}
+.btn.danger{background:var(--red)}
+.btn.sm{padding:5px 9px;font-size:12.5px;border-radius:7px}
+.chip{border:1px solid var(--bd);background:var(--card);color:var(--mut);border-radius:20px;padding:5px 12px;cursor:pointer;font-size:12.5px}
+.chip.on{background:var(--p);color:#fff;border-color:var(--p)}
+.tw{overflow-x:auto;border:1px solid var(--bd);border-radius:14px;background:var(--card)}
+table{width:100%;border-collapse:collapse}
+th,td{padding:10px 12px;border-bottom:1px solid var(--bd);text-align:left;vertical-align:middle}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.3px;color:var(--mut);background:var(--bg);position:sticky;top:0;white-space:nowrap}
+td.r,th.r{text-align:right;white-space:nowrap}
+tr:hover td{background:rgba(0,161,154,.05)}
+tr.row-late td:first-child{box-shadow:inset 3px 0 0 var(--red)}
+.acts{white-space:nowrap;display:flex;gap:5px;justify-content:flex-end}
+.prog{height:7px;background:var(--bd);border-radius:5px;overflow:hidden;min-width:100px}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--p),#43d1c9);border-radius:5px}
+small{color:var(--mut)}
+.tag{display:inline-block;padding:3px 9px;border-radius:12px;font-size:12px;font-weight:600;color:#fff;white-space:nowrap}
+.ok{background:var(--grn)}.soon{background:var(--amb)}.late{background:var(--red)}.wait{background:var(--gry)}
+.empty{text-align:center;color:var(--mut);padding:30px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.dl{border:1px solid var(--bd);border-radius:12px;padding:12px;border-left:4px solid var(--gry)}
+.dl.late{border-left-color:var(--red)}.dl.soon{border-left-color:var(--amb)}
+.dl b{display:block}
+dialog{border:none;border-radius:16px;padding:0;width:min(640px,94vw);background:var(--card);color:var(--tx);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+dialog::backdrop{background:rgba(0,0,0,.4)}
+.dlgh{padding:16px 20px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
+.dlgh h3{margin:0;font-size:16px}
+.dlgb{padding:18px 20px;display:grid;gap:12px}
+.dlgf{padding:14px 20px;border-top:1px solid var(--bd);display:flex;justify-content:flex-end;gap:8px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.row2{grid-template-columns:1fr}}
+label{display:grid;gap:5px;font-size:12.5px;color:var(--mut)}
+.hint{font-size:12px;color:var(--mut)}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.summary div{background:var(--bg);border-radius:10px;padding:10px}
+.summary b{display:block;font-size:16px;margin-top:2px}
+#login{max-width:380px;margin:90px auto;background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:26px;display:grid;gap:12px}
+#login h2{margin:0;font-size:20px}
+.err{color:var(--red);font-size:13px}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(120px);background:#1d2a2a;color:#fff;padding:11px 18px;border-radius:10px;transition:transform .3s;z-index:99;font-size:13.5px}
+#toast.show{transform:translateX(-50%) translateY(0)}
+@media print{header nav,.noprint,.acts{display:none!important}main{padding:0}.panel,.tw{border:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="top">
+    <img src="logo.png" alt="Laguna" onerror="this.style.display='none'">
+    <h1>Quản lý đặt cọc hợp đồng</h1>
+    <span class="who" id="who"></span>
+    <button class="btn ghost hidden noprint" id="logoutBtn" onclick="auth.signOut()">Đăng xuất</button>
+  </div>
+  <nav class="hidden" id="nav">
+    <button class="on" data-v="overview" onclick="show('overview')">Tổng quan</button>
+    <button data-v="contracts" onclick="show('contracts')">Hợp đồng</button>
+    <button data-v="partners" onclick="show('partners')">Đối tác</button>
+    <button data-v="ledger" onclick="show('ledger')">Sổ thu tiền</button>
+  </nav>
+</header>
+
+<section id="login" class="hidden">
+  <h2>Đăng nhập</h2>
+  <input id="email" type="email" placeholder="Email" autocomplete="username">
+  <input id="password" type="password" placeholder="Mật khẩu" autocomplete="current-password" onkeydown="if(event.key==='Enter')login()">
+  <button class="btn" onclick="login()">Đăng nhập</button>
+  <div id="loginErr" class="err"></div>
+</section>
+
+<main id="app" class="hidden">
+
+  <!-- TỔNG QUAN -->
+  <div id="v-overview" class="view">
+    <div class="kpis" id="kpis"></div>
+    <div class="grid2">
+      <div class="panel"><h3>Cọc phải thu & đã thu theo tháng đến hạn</h3><canvas id="cMonth" height="110"></canvas></div>
+      <div class="panel"><h3>Cơ cấu trạng thái</h3><canvas id="cStatus"></canvas></div>
+    </div>
+    <div class="grid2">
+      <div class="panel">
+        <h3>Tuổi nợ cọc (còn phải thu)</h3>
+        <div class="tw"><table><thead><tr><th>Nhóm</th><th class="r">Số HĐ</th><th class="r">Số tiền còn thiếu</th><th>Tỷ trọng</th></tr></thead><tbody id="aging"></tbody></table></div>
+      </div>
+      <div class="panel">
+        <h3>Cần xử lý trong 30 ngày</h3>
+        <div id="upcoming" class="cards" style="grid-template-columns:1fr"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HỢP ĐỒNG -->
+  <div id="v-contracts" class="view hidden">
+    <div class="toolbar">
+      <input class="grow" id="search" placeholder="🔎  Tìm đối tác hoặc số hợp đồng..." oninput="renderContracts()">
+      <select id="fPartner" onchange="renderContracts()"><option value="">Tất cả đối tác</option></select>
+      <select id="fSort" onchange="renderContracts()">
+        <option value="due">Sắp xếp: hạn gần nhất</option>
+        <option value="rem">Còn thiếu nhiều nhất</option>
+        <option value="val">Giá trị HĐ lớn nhất</option>
+      </select>
+      <button class="btn ghost" onclick="exportCSV()">⬇ Xuất Excel</button>
+      <button class="btn ghost" onclick="window.print()">🖨 In</button>
+      <button class="btn" onclick="openNew()">+ Thêm hợp đồng</button>
+    </div>
+    <div class="toolbar" id="chips"></div>
+    <div class="tw"><table>
+      <thead><tr><th>Đối tác</th><th>Số HĐ</th><th class="r">Giá trị HĐ</th><th class="r">Cọc phải đóng</th><th class="r">Đã thu</th><th>Đã cọc / HĐ</th><th>Hạn cọc</th><th>Trạng thái</th><th></th></tr></thead>
+      <tbody id="ctbody"></tbody>
+    </table></div>
+  </div>
+
+  <!-- ĐỐI TÁC -->
+  <div id="v-partners" class="view hidden">
+    <div class="tw"><table>
+      <thead><tr><th>Đối tác</th><th class="r">Số HĐ</th><th class="r">Tổng giá trị HĐ</th><th class="r">Cọc phải thu</th><th class="r">Đã thu</th><th class="r">Còn thiếu</th><th>Tỷ lệ cọc / tổng HĐ</th></tr></thead>
+      <tbody id="ptbody"></tbody>
+    </table></div>
+  </div>
+
+  <!-- SỔ THU -->
+  <div id="v-ledger" class="view hidden">
+    <div class="toolbar">
+      <label style="width:auto">Lọc theo tháng <input type="month" id="ledgerMonth" onchange="renderLedger()" style="width:auto"></label>
+      <button class="btn ghost" onclick="document.getElementById('ledgerMonth').value='';renderLedger()">Tất cả</button>
+      <span class="grow"></span>
+      <b id="ledgerTotal"></b>
+    </div>
+    <div class="tw"><table>
+      <thead><tr><th>Ngày thu</th><th>Đối tác</th><th>Số HĐ</th><th class="r">Số tiền</th><th>Hình thức</th><th>Số chứng từ</th><th>Ghi chú</th></tr></thead>
+      <tbody id="lbody"></tbody>
+    </table></div>
+  </div>
+</main>
+
+<!-- Dialog: hợp đồng -->
+<dialog id="dlgC">
+  <form onsubmit="saveContract(event)">
+    <div class="dlgh"><h3 id="dlgCTitle">Thêm hợp đồng</h3><button type="button" class="btn ghost sm" onclick="dlgC.close()">✕</button></div>
+    <div class="dlgb">
+      <div class="row2">
+        <label>Đối tác <input name="partner" required></label>
+        <label>Số hợp đồng <input name="contractNo" required></label>
+      </div>
+      <div class="row2">
+        <label>Giá trị hợp đồng (VND) <input name="totalValue" inputmode="numeric" required></label>
+        <label>Số tiền cọc phải đóng (VND) <input name="depositAmount" inputmode="numeric" required></label>
+      </div>
+      <div class="row2">
+        <label>Hạn thanh toán cọc <input name="dueDate" type="date" required></label>
+        <label>Đã thu trước khi dùng sổ (số dư đầu) <input name="depositPaid" inputmode="numeric" placeholder="0"></label>
+      </div>
+      <div class="hint" id="pctHint"></div>
+      <label>Ghi chú <textarea name="note" rows="2"></textarea></label>
+    </div>
+    <div class="dlgf"><button type="button" class="btn ghost" onclick="dlgC.close()">Hủy</button><button class="btn">Lưu hợp đồng</button></div>
+  </form>
+</dialog>
+
+<!-- Dialog: thu tiền -->
+<dialog id="dlgP">
+  <form onsubmit="savePayment(event)">
+    <div class="dlgh"><h3>Ghi nhận thu tiền cọc</h3><button type="button" class="btn ghost sm" onclick="dlgP.close()">✕</button></div>
+    <div class="dlgb">
+      <label>Hợp đồng <select name="cid" required onchange="fillRemain()"></select></label>
+      <div class="hint" id="remainHint"></div>
+      <div class="row2">
+        <label>Ngày thu <input name="date" type="date" required></label>
+        <label>Số tiền thu (VND) <input name="amount" inputmode="numeric" required></label>
+      </div>
+      <div class="row2">
+        <label>Hình thức <select name="method"><option>Chuyển khoản</option><option>Tiền mặt</option><option>Séc</option><option>Khác</option></select></label>
+        <label>Số chứng từ / mã GD <input name="ref"></label>
+      </div>
+      <label>Ghi chú <input name="note"></label>
+    </div>
+    <div class="dlgf"><button type="button" class="btn ghost" onclick="fillRemain(true)">Thu đủ phần còn lại</button><button type="button" class="btn ghost" onclick="dlgP.close()">Hủy</button><button class="btn">Lưu khoản thu</button></div>
+  </form>
+</dialog>
+
+<!-- Dialog: chi tiết -->
+<dialog id="dlgD">
+  <div class="dlgh"><h3 id="dTitle"></h3><button class="btn ghost sm" onclick="dlgD.close()">✕</button></div>
+  <div class="dlgb">
+    <div class="summary" id="dSum"></div>
+    <div class="prog" id="dProg"><i></i></div>
+    <div class="tw"><table><thead><tr><th>Ngày</th><th class="r">Số tiền</th><th>Hình thức</th><th>Chứng từ</th><th></th></tr></thead><tbody id="dPay"></tbody></table></div>
+    <div class="hint" id="dNote"></div>
+  </div>
+  <div class="dlgf"><button class="btn ghost" onclick="openEdit(detailId)">Sửa hợp đồng</button><button class="btn" onclick="openPay(detailId)">+ Thu thêm</button></div>
+</dialog>
+
+<div id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+/* ===== Dán cấu hình Firebase của bạn vào đây ===== */
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+/* =============================================== */
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth(), db = firebase.firestore();
+const $ = id => document.getElementById(id);
+const dlgC = $('dlgC'), dlgP = $('dlgP'), dlgD = $('dlgD');
+let contracts = [], unsub = null, view = 'overview', editId = null, detailId = null, chip = 'all', charts = {};
+
+/* ---------- Tiện ích ---------- */
+const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const num = n => Number(n) || 0;
+const parseMoney = s => Number(String(s).replace(/\D/g, '')) || 0;
+const fmt = n => num(n).toLocaleString('vi-VN') + ' ₫';
+const short = n => { n = num(n); const a = Math.abs(n);
+  if (a >= 1e9) return (n / 1e9).toLocaleString('vi-VN', {maximumFractionDigits: 2}) + ' tỷ ₫';
+  if (a >= 1e6) return (n / 1e6).toLocaleString('vi-VN', {maximumFractionDigits: 1}) + ' tr ₫';
+  return fmt(n); };
+const pc = (a, b) => b > 0 ? a / b * 100 : 0;
+const fd = d => d ? d.split('-').reverse().join('/') : '—';
+const today = () => new Date().toLocaleDateString('en-CA', {timeZone: 'Asia/Ho_Chi_Minh'});
+const dayDiff = (a, b) => Math.round((Date.parse(a) - Date.parse(b)) / 864e5);
+const sum = (arr, f) => arr.reduce((s, x) => s + num(f(x)), 0);
+const paid = c => num(c.depositPaid) + sum(c.payments || [], p => p.amount);
+const remain = c => Math.max(0, num(c.depositAmount) - paid(c));
+function st(c) {
+  if (remain(c) <= 0) return {k: 'paid', l: 'Đã cọc đủ', c: 'ok'};
+  if (!c.dueDate) return {k: 'nodue', l: 'Chưa có hạn', c: 'wait'};
+  const d = dayDiff(c.dueDate, today());
+  if (d < 0) return {k: 'late', l: `Quá hạn ${-d} ngày`, c: 'late', d: -d};
+  if (d <= 7) return {k: 'soon', l: `Còn ${d} ngày`, c: 'soon', d};
+  return {k: 'future', l: `Còn ${d} ngày`, c: 'wait', d};
+}
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2400); }
+function bindMoney(el) { el.addEventListener('input', () => { const v = parseMoney(el.value); el.value = v ? v.toLocaleString('vi-VN') : ''; }); }
+['totalValue', 'depositAmount', 'depositPaid'].forEach(n => bindMoney($('dlgC').querySelector(`[name=${n}]`)));
+bindMoney(dlgP.querySelector('[name=amount]'));
+function download(name, text) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['\ufeff' + text], {type: 'text/csv;charset=utf-8'}));
+  a.download = name; a.click();
+}
+
+/* ---------- Điều hướng ---------- */
+function show(v) {
+  view = v;
+  document.querySelectorAll('.view').forEach(el => el.classList.toggle('hidden', el.id !== 'v-' + v));
+  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
+  renderAll();
+}
+
+/* ---------- Tổng quan ---------- */
+function renderOverview() {
+  const tot = sum(contracts, c => c.totalValue), req = sum(contracts, c => c.depositAmount);
+  const col = sum(contracts, paid), out = sum(contracts, remain);
+  const late = contracts.filter(c => st(c).k === 'late');
+  $('kpis').innerHTML = [
+    ['Tổng giá trị hợp đồng', short(tot), `${contracts.length} hợp đồng`, ''],
+    ['Cọc phải thu', short(req), `${pc(req, tot).toFixed(1)}% tổng giá trị HĐ`, ''],
+    ['Đã thu', short(col), `${pc(col, req).toFixed(1)}% cọc phải thu`, 'ok'],
+    ['Còn phải thu', short(out), `${contracts.filter(c => remain(c) > 0).length} HĐ chưa đủ cọc`, ''],
+    ['Quá hạn', short(sum(late, remain)), `${late.length} hợp đồng`, late.length ? 'warn' : 'ok'],
+  ].map(k => `<div class="kpi ${k[3]}"><span>${k[0]}</span><b>${k[1]}</b><small>${k[2]}</small></div>`).join('');
+
+  // Biểu đồ theo tháng
+  const months = {};
+  contracts.forEach(c => { if (!c.dueDate) return; const m = c.dueDate.slice(0, 7);
+    months[m] ??= {req: 0, col: 0}; months[m].req += num(c.depositAmount); months[m].col += paid(c); });
+  const keys = Object.keys(months).sort();
+  charts.m?.destroy();
+  charts.m = new Chart($('cMonth'), {type: 'bar', data: {labels: keys.map(k => k.split('-').reverse().join('/')),
+    datasets: [{label: 'Cọc phải thu', data: keys.map(k => months[k].req), backgroundColor: 'rgba(0,161,154,.35)', borderRadius: 6},
+               {label: 'Đã thu', data: keys.map(k => months[k].col), backgroundColor: '#00a19a', borderRadius: 6}]},
+    options: {maintainAspectRatio: true, plugins: {legend: {position: 'bottom'}}, scales: {y: {ticks: {callback: v => short(v)}}}}});
+
+  // Biểu đồ trạng thái
+  const cnt = {paid: 0, soon: 0, future: 0, late: 0, nodue: 0};
+  contracts.forEach(c => cnt[st(c).k]++);
+  charts.s?.destroy();
+  charts.s = new Chart($('cStatus'), {type: 'doughnut', data: {labels: ['Đã đủ', 'Sắp đến hạn', 'Chưa đến hạn', 'Quá hạn', 'Chưa có hạn'],
+    datasets: [{data: [cnt.paid, cnt.soon, cnt.future, cnt.late, cnt.nodue], backgroundColor: ['#27a467', '#f0a020', '#00a19a', '#e04848', '#8a9696'], borderWidth: 0}]},
+    options: {plugins: {legend: {position: 'bottom'}}, cutout: '62%'}});
+
+  // Tuổi nợ
+  const B = [['Chưa đến hạn', 0, 0], ['Quá hạn 1–30 ngày', 0, 0], ['Quá hạn 31–60 ngày', 0, 0], ['Quá hạn trên 60 ngày', 0, 0]];
+  contracts.forEach(c => { const r = remain(c); if (!r) return; const s = st(c);
+    const i = s.k !== 'late' ? 0 : s.d <= 30 ? 1 : s.d <= 60 ? 2 : 3; B[i][1]++; B[i][2] += r; });
+  const totalOut = B.reduce((s, b) => s + b[2], 0);
+  $('aging').innerHTML = B.map(b => `<tr><td>${b[0]}</td><td class="r">${b[1]}</td><td class="r">${fmt(b[2])}</td>
+    <td style="min-width:140px"><div class="prog"><i style="width:${pc(b[2], totalOut)}%"></i></div></td></tr>`).join('');
+
+  // Sắp đến hạn
+  const up = contracts.filter(c => remain(c) > 0 && c.dueDate && dayDiff(c.dueDate, today()) <= 30)
+    .sort((a, b) => a.dueDate.localeCompare(b.dueDate));
+  $('upcoming').innerHTML = up.map(c => { const s = st(c); return `
+    <div class="dl ${s.k === 'late' ? 'late' : s.k === 'soon' ? 'soon' : ''}">
+      <b>${esc(c.partner)} <small>· ${esc(c.contractNo)}</small></b>
+      <div>Còn thiếu <b style="display:inline">${fmt(remain(c))}</b> · Hạn ${fd(c.dueDate)}</div>
+      <span class="tag ${s.c}">${s.l}</span>
+      <button class="btn sm" style="float:right" onclick="openPay('${c.id}')">Thu tiền</button>
+    </div>`; }).join('') || '<div class="empty">Không có hợp đồng nào đến hạn trong 30 ngày tới 🎉</div>';
+}
+
+/* ---------- Hợp đồng ---------- */
+const CHIPS = [['all', 'Tất cả'], ['open', 'Còn thiếu'], ['late', 'Quá hạn'], ['soon', 'Sắp đến hạn'], ['future', 'Chưa đến hạn'], ['paid', 'Đã đủ']];
+function renderContracts() {
+  const q = $('search').value.trim().toLowerCase(), p = $('fPartner').value, sort = $('fSort').value;
+  const partners = [...new Set(contracts.map(c => c.partner))].sort();
+  const cur = $('fPartner').value;
+  $('fPartner').innerHTML = '<option value="">Tất cả đối tác</option>' + partners.map(x => `<option ${x === cur ? 'selected' : ''}>${esc(x)}</option>`).join('');
+  $('chips').innerHTML = CHIPS.map(([k, l]) => `<button class="chip ${chip === k ? 'on' : ''}" onclick="chip='${k}';renderContracts()">${l}</button>`).join('');
+  const sorter = {due: (a, b) => (a.dueDate || '9999').localeCompare(b.dueDate || '9999'), rem: (a, b) => remain(b) - remain(a), val: (a, b) => num(b.totalValue) - num(a.totalValue)}[sort];
+  const list = contracts.filter(c => {
+    const s = st(c);
+    if (q && !(c.partner + ' ' + c.contractNo).toLowerCase().includes(q)) return false;
+    if (p && c.partner !== p) return false;
+    return chip === 'all' || (chip === 'open' ? remain(c) > 0 : s.k === chip);
+  }).sort(sorter);
+  window._list = list;
+  $('ctbody').innerHTML = list.map(c => { const s = st(c), pd = paid(c), r = pc(pd, c.totalValue); return `
+    <tr class="${s.k === 'late' ? 'row-late' : ''}">
+      <td><b>${esc(c.partner)}</b></td><td>${esc(c.contractNo)}</td>
+      <td class="r">${fmt(c.totalValue)}</td><td class="r">${fmt(c.depositAmount)}</td><td class="r">${fmt(pd)}</td>
+      <td style="min-width:130px"><div class="prog"><i style="width:${Math.min(r, 100)}%"></i></div><small>${r.toFixed(1)}% HĐ</small></td>
+      <td>${fd(c.dueDate)}</td><td><span class="tag ${s.c}">${s.l}</span></td>
+      <td class="acts">
+        <button class="btn sm" onclick="openPay('${c.id}')">Thu tiền</button>
+        <button class="btn sm ghost" onclick="openDetail('${c.id}')">Chi tiết</button>
+        <button class="btn sm ghost" onclick="openEdit('${c.id}')">Sửa</button>
+        <button class="btn sm danger" onclick="delContract('${c.id}')">Xóa</button>
+      </td></tr>`; }).join('') || '<tr><td colspan="9" class="empty">Không có hợp đồng phù hợp</td></tr>';
+}
+function exportCSV() {
+  const rows = [['Đối tác', 'Số HĐ', 'Giá trị HĐ', 'Cọc phải đóng', 'Đã thu', 'Còn thiếu', '% đã cọc/HĐ', 'Hạn cọc', 'Trạng thái']];
+  (window._list || []).forEach(c => rows.push([c.partner, c.contractNo, num(c.totalValue), num(c.depositAmount), paid(c), remain(c),
+    pc(paid(c), c.totalValue).toFixed(1) + '%', fd(c.dueDate), st(c).l]));
+  download(`dat-coc-${today()}.csv`, rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(';')).join('\n'));
+  toast('Đã xuất file Excel (CSV)');
+}
+
+/* ---------- Đối tác ---------- */
+function renderPartners() {
+  const g = {};
+  contracts.forEach(c => { const x = g[c.partner] ??= {n: 0, tot: 0, req: 0, col: 0, out: 0}; x.n++; x.tot += num(c.totalValue); x.req += num(c.depositAmount); x.col += paid(c); x.out += remain(c); });
+  const rows = Object.entries(g).sort((a, b) => b[1].out - a[1].out);
+  $('ptbody').innerHTML = rows.map(([name, x]) => `<tr>
+    <td><b>${esc(name)}</b></td><td class="r">${x.n}</td><td class="r">${fmt(x.tot)}</td><td class="r">${fmt(x.req)}</td>
+    <td class="r">${fmt(x.col)}</td><td class="r" style="color:${x.out ? 'var(--red)' : 'var(--grn)'}">${fmt(x.out)}</td>
+    <td style="min-width:160px"><div class="prog"><i style="width:${Math.min(pc(x.col, x.tot), 100)}%"></i></div><small>${pc(x.col, x.tot).toFixed(1)}%</small></td></tr>`).join('')
+    || '<tr><td colspan="7" class="empty">Chưa có dữ liệu</td></tr>';
+}
+
+/* ---------- Sổ thu ---------- */
+function renderLedger() {
+  const m = $('ledgerMonth').value;
+  const rows = contracts.flatMap(c => (c.payments || []).map(p => ({...p, partner: c.partner, contractNo: c.contractNo})))
+    .filter(p => !m || (p.date || '').startsWith(m)).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  $('ledgerTotal').textContent = 'Tổng thu: ' + fmt(sum(rows, r => r.amount));
+  $('lbody').innerHTML = rows.map(p => `<tr><td>${fd(p.date)}</td><td>${esc(p.partner)}</td><td>${esc(p.contractNo)}</td>
+    <td class="r">${fmt(p.amount)}</td><td>${esc(p.method)}</td><td>${esc(p.ref)}</td><td>${esc(p.note)}</td></tr>`).join('')
+    || '<tr><td colspan="7" class="empty">Chưa có khoản thu nào</td></tr>';
+}
+
+/* ---------- Thêm / sửa hợp đồng ---------- */
+function openNew() {
+  const f = dlgC.querySelector('form'); f.reset(); editId = null;
+  $('dlgCTitle').textContent = 'Thêm hợp đồng'; dlgC.showModal();
+}
+function openEdit(id) {
+  const c = contracts.find(x => x.id === id); if (!c) return;
+  const f = dlgC.querySelector('form'); f.reset(); editId = id;
+  ['partner', 'contractNo', 'dueDate', 'note'].forEach(k => f[k].value = c[k] ?? '');
+  ['totalValue', 'depositAmount', 'depositPaid'].forEach(k => f[k].value = num(c[k]) ? num(c[k]).toLocaleString('vi-VN') : '');
+  $('dlgCTitle').textContent = 'Sửa hợp đồng'; dlgC.close(); dlgD.close(); dlgC.showModal();
+}
+dlgC.querySelector('form').addEventListener('input', e => {
+  const f = e.currentTarget, t = parseMoney(f.totalValue.value), d = parseMoney(f.depositAmount.value);
+  $('pctHint').textContent = t ? `Cọc phải đóng = ${pc(d, t).toFixed(1)}% giá trị hợp đồng` + (d > t ? ' ⚠ Cọc lớn hơn giá trị HĐ' : '') : '';
+});
+async function saveContract(e) {
+  e.preventDefault(); const f = e.target;
+  const data = {partner: f.partner.value.trim(), contractNo: f.contractNo.value.trim(),
+    totalValue: parseMoney(f.totalValue.value), depositAmount: parseMoney(f.depositAmount.value),
+    depositPaid: parseMoney(f.depositPaid.value), dueDate: f.dueDate.value, note: f.note.value.trim(),
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp(), updatedBy: auth.currentUser?.email || ''};
+  try {
+    if (editId) await db.collection('contracts').doc(editId).update(data);
+    else await db.collection('contracts').add({...data, payments: [], reminderSentFor: '',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()});
+    dlgC.close(); toast('Đã lưu hợp đồng');
+  } catch (err) { toast('Lỗi: ' + err.message); }
+}
+async function delContract(id) {
+  const c = contracts.find(x => x.id === id);
+  if (!confirm(`Xóa hợp đồng ${c.contractNo} của ${c.partner}? Toàn bộ lịch sử thu sẽ mất.`)) return;
+  await db.collection('contracts').doc(id).delete(); toast('Đã xóa hợp đồng');
+}
+
+/* ---------- Thu tiền ---------- */
+function openPay(cid) {
+  const sel = dlgP.querySelector('[name=cid]');
+  sel.innerHTML = contracts.map(c => `<option value="${c.id}">${esc(c.partner)} · ${esc(c.contractNo)} (còn ${fmt(remain(c))})</option>`).join('');
+  sel.value = cid || (contracts.find(c => remain(c) > 0)?.id ?? contracts[0]?.id ?? '');
+  const f = dlgP.querySelector('form'); f.reset(); f.date.value = today(); f.amount.value = '';
+  fillRemain(); dlgD.close(); dlgP.showModal();
+}
+function fillRemain(full) {
+  const c = contracts.find(x => x.id === dlgP.querySelector('[name=cid]').value); if (!c) return;
+  $('remainHint').textContent = `Cọc phải đóng ${fmt(c.depositAmount)} · Đã thu ${fmt(paid(c))} · Còn thiếu ${fmt(remain(c))}`;
+  if (full === true) dlgP.querySelector('[name=amount]').value = remain(c).toLocaleString('vi-VN');
+}
+async function savePayment(e) {
+  e.preventDefault(); const f = e.target, c = contracts.find(x => x.id === f.cid.value);
+  const amount = parseMoney(f.amount.value); if (!amount || !c) return toast('Vui lòng nhập số tiền');
+  const p = {id: Math.random().toString(36).slice(2, 10), date: f.date.value, amount, method: f.method.value,
+    ref: f.ref.value.trim(), note: f.note.value.trim(), by: auth.currentUser?.email || ''};
+  await db.collection('contracts').doc(c.id).update({payments: firebase.firestore.FieldValue.arrayUnion(p),
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()});
+  dlgP.close(); toast(remain({...c, payments: [...(c.payments || []), p]}) ? 'Đã ghi nhận khoản thu' : '🎉 Hợp đồng đã cọc đủ');
+}
+
+/* ---------- Chi tiết ---------- */
+function openDetail(id) {
+  const c = contracts.find(x => x.id === id); if (!c) return;
+  detailId = id; const s = st(c), pd = paid(c);
+  $('dTitle').textContent = `${c.partner} · ${c.contractNo}`;
+  $('dSum').innerHTML = `<div>Giá trị HĐ<b>${fmt(c.totalValue)}</b></div><div>Cọc phải đóng<b>${fmt(c.depositAmount)}</b></div>
+    <div>Còn thiếu<b style="color:${remain(c) ? 'var(--red)' : 'var(--grn)'}">${fmt(remain(c))}</b></div>`;
+  $('dProg').firstElementChild.style.width = Math.min(pc(pd, c.depositAmount), 100) + '%';
+  const rows = [...(num(c.depositPaid) ? [{date: '', amount: c.depositPaid, method: 'Số dư đầu', ref: '', id: null}] : []), ...(c.payments || [])];
+  $('dPay').innerHTML = rows.map(p => `<tr><td>${fd(p.date)}</td><td class="r">${fmt(p.amount)}</td><td>${esc(p.method)}</td><td>${esc(p.ref)}</td>
+    <td class="acts">${p.id ? `<button class="btn sm danger" onclick="delPayment('${id}','${p.id}')">Xóa</button>` : ''}</td></tr>`).join('')
+    || '<tr><td colspan="5" class="empty">Chưa có khoản thu</td></tr>';
+  $('dNote').innerHTML = `<span class="tag ${s.c}">${s.l}</span> &nbsp; ${c.note ? esc(c.note) : ''} ${c.updatedBy ? '· Cập nhật bởi ' + esc(c.updatedBy) : ''}`;
+  dlgD.showModal();
+}
+async function delPayment(cid, pid) {
+  if (!confirm('Xóa khoản thu này?')) return;
+  const c = contracts.find(x => x.id === cid), p = (c.payments || []).find(x => x.id === pid);
+  await db.collection('contracts').doc(cid).update({payments: firebase.firestore.FieldValue.arrayRemove(p)});
+  toast('Đã xóa khoản thu');
+}
+
+/* ---------- Render tổng ---------- */
+function renderAll() {
+  if (view === 'overview') renderOverview();
+  if (view === 'contracts') renderContracts();
+  if (view === 'partners') renderPartners();
+  if (view === 'ledger') renderLedger();
+}
+
+/* ---------- Đăng nhập ---------- */
+function login() {
+  $('loginErr').textContent = '';
+  auth.signInWithEmailAndPassword($('email').value.trim(), $('password').value)
+    .catch(err => $('loginErr').textContent = 'Đăng nhập thất bại: ' + err.message);
+}
+auth.onAuthStateChanged(user => {
+  $('login').classList.toggle('hidden', !!user);
+  $('app').classList.toggle('hidden', !user);
+  $('nav').classList.toggle('hidden', !user);
+  $('logoutBtn').classList.toggle('hidden', !user);
+  $('who').textContent = user ? user.email : '';
+  if (user) {
+    unsub?.();
+    unsub = db.collection('contracts').onSnapshot(snap => {
+      contracts = snap.docs.map(d => ({id: d.id, ...d.data()}));
+      renderAll();
+    });
+    show('overview');
+  } else { unsub?.(); unsub = null; contracts = []; }
+});
+</script>
+</body>
+</html>
