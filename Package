@@ -1,0 +1,12 @@
+{
+  "name": "deposit-reminder",
+  "description": "Nhắc hạn đặt cọc hợp đồng qua Gmail",
+  "main": "index.js",
+  "engines": {"node": "20"},
+  "dependencies": {
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^6.0.1",
+    "nodemailer": "^6.9.14"
+  },
+  "private": true
+}
