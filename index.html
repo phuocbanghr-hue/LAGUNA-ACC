@@ -230,6 +230,67 @@ dialog#dlgK{width:min(560px,94vw);margin-top:12vh;border-radius:22px}
 .ki.on,.ki:hover{background:var(--mint)}.ki span{font-weight:600}
 kbd{font:600 11px var(--font);padding:2px 7px;border:1px solid var(--bd2);border-bottom-width:2px;border-radius:6px;color:var(--mut);background:var(--card)}
 .kpi b{font-variant-numeric:tabular-nums}
+
+/* ===== Nâng cấp giao diện v2 ===== */
+body:has(#login:not(.hidden)){background-image:linear-gradient(155deg,var(--mint),var(--bg) 45%,var(--blush));background-attachment:fixed}
+body:has(#login:not(.hidden)) header{display:none}
+#login{max-width:420px;margin:7vh auto;padding:36px 34px 24px;border-radius:26px;gap:12px}
+#login:before,#login:after{opacity:.55}
+.lg-round{width:148px;height:148px;display:block;margin:0 auto 2px;border-radius:50%;box-shadow:0 0 0 6px var(--mint),0 18px 36px -16px rgba(11,111,106,.5)}
+#login h2{text-align:center;font-size:21px;margin-top:10px}#login p{text-align:center;margin:-4px 0 6px;font-size:13px}
+.fld{display:grid;gap:6px;font-size:12.5px;font-weight:600;color:var(--mut)}
+.fld input{font:inherit;font-weight:400;color:var(--tx);padding:11px 14px;border:1px solid var(--bd2);border-radius:12px;background:var(--bg);outline:none;width:100%;transition:border-color .15s,box-shadow .15s}
+.fld input:focus{border-color:var(--teal);box-shadow:0 0 0 3px color-mix(in srgb,var(--teal) 18%,transparent);background:var(--card)}
+.pw{position:relative;display:block}.pw input{padding-right:62px}
+.pwt{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--teal-d);font:600 12.5px var(--font);cursor:pointer;padding:6px 8px;border-radius:8px}.pwt:hover{background:var(--mint)}
+.lgbtn{padding:12px;font-size:14.5px;margin-top:4px}.lgbtn:disabled{opacity:.65;cursor:wait}
+.lnk{border:0;background:none;color:var(--teal-d);font:500 13px var(--font);cursor:pointer;justify-self:center;padding:2px}.lnk:hover{text-decoration:underline}
+.lgfoot{text-align:center;color:var(--mut);font-size:11.5px;margin-top:6px;padding-top:14px;border-top:1px solid var(--bd)}
+header{box-shadow:0 1px 0 var(--bd),0 10px 30px -22px rgba(11,111,106,.5)}.top img{height:40px}
+nav{background:transparent;border-bottom:0;padding:0;gap:2px}nav button{border-radius:10px;padding:8px 16px;font-weight:600}nav button.on{background:var(--mint);color:var(--teal-d);box-shadow:inset 0 -2px 0 var(--teal)}
+.welcome{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px;padding:20px 24px;border-radius:20px;background:linear-gradient(110deg,var(--teal-d),var(--teal) 70%,#35b9b1);color:#fff;box-shadow:0 18px 36px -22px rgba(11,111,106,.7)}
+.welcome h2{margin:0 0 4px;font-size:20px;font-weight:700}.welcome p{margin:0;opacity:.95;font-size:13.5px;text-transform:none}.welcome b{font-weight:700}.welcome .r1{background:#fff;color:var(--t-late);padding:1px 8px;border-radius:999px}.welcome .r2{background:#fff;color:var(--t-soon);padding:1px 8px;border-radius:999px}
+.welcome .btn{background:#fff;color:var(--teal-d)}
+.kpi{background:var(--card)!important;border:1px solid var(--bd);border-top:3px solid var(--teal);border-radius:16px;box-shadow:var(--shadow)}.kpi:before,.kpi:after{display:none}
+.kpi:nth-child(2){border-top-color:#6fcdc6}.kpi:nth-child(3){border-top-color:#6b9fd8}.kpi:nth-child(4){border-top-color:#e0a64a}.kpi:nth-child(5){border-top-color:var(--pk)}
+.kpi b{font-size:28px}.panel{border-radius:18px}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:600;background:color-mix(in srgb,var(--mint) 70%,var(--card))}
+tbody tr{transition:background .12s}tbody tr:hover td{background:color-mix(in srgb,var(--mint) 55%,transparent)}
+.sumbar{display:flex;gap:10px 26px;flex-wrap:wrap;margin:0 0 12px;padding:10px 16px;border-radius:12px;background:var(--card);border:1px solid var(--bd);color:var(--mut);font-size:13px}.sumbar b{color:var(--tx);font-weight:650}.sumbar b.r1{color:var(--red)}
+
+/* ===== Giao diện v3: nền trắng, chữ cam và xanh dương (theo tông DUE) ===== */
+:root{color-scheme:light;--teal:#1a6bb5;--teal-d:#14558f;--pk:#f26522;--mint:#eef5fc;--aqua:#dde9f6;--blush:#fff1e8;--rose:#fbd3bb;--sand:#fff7ee;--sky:#eef5fc;
+--p:#1a6bb5;--p-h:#14558f;--on-p:#fff;--bg:#fff;--card:#fff;--tx:#3f4650;--mut:#6b7280;--bd:#e5e7eb;--bd2:#d1d5db;--red:#d93025;--amb:#b45f06;--grn:#188a4f;--gry:#6b7280;
+--t-ok-bg:#e3f4ea;--t-ok:#146c3e;--t-soon-bg:#fff0d9;--t-soon:#9a5a00;--t-late-bg:#fde4e1;--t-late:#b42318;--t-wait-bg:#eef1f4;--t-wait:#4b5563;
+--shadow:0 1px 2px rgba(16,24,40,.06),0 4px 14px -8px rgba(16,24,40,.12)}
+body{background:#fff!important;background-image:none!important;font-size:14.5px}
+body:has(#login:not(.hidden)){background:#f5f8fc!important}
+header{background:#fff;backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none;border-bottom:1px solid var(--bd)}
+.top h1{color:var(--pk);font-weight:700}.top .who{background:var(--mint);color:var(--teal-d)}
+nav{background:none}nav button{color:#333;background:none;font-weight:500}nav button:hover{color:var(--teal)}
+nav button.on{background:none;color:var(--teal);font-weight:700;box-shadow:inset 0 -3px 0 var(--pk);border-radius:0}
+.panel h3{color:var(--pk);font-size:16px;font-weight:700}.panel{box-shadow:none;border:1px solid var(--bd);border-radius:14px}
+.welcome{background:#fff;color:var(--tx);border:1px solid var(--bd);border-left:5px solid var(--pk);box-shadow:none;border-radius:14px}
+.welcome h2{color:var(--pk);font-size:22px}.welcome p{color:#555;opacity:1}
+.welcome .r1{background:var(--t-late-bg);color:var(--t-late)}.welcome .r2{background:var(--t-soon-bg);color:var(--t-soon)}
+.welcome .btn{background:var(--teal);color:#fff}
+.kpi{border:1px solid var(--bd);border-top:3px solid var(--teal);box-shadow:none;border-radius:12px}
+.kpi:nth-child(n){border-top-color:var(--teal)}.kpi:nth-child(5){border-top-color:var(--pk)}
+.kpi b{color:var(--teal-d)}.kpi.warn b{color:var(--pk)}.kpi span{color:#555;font-weight:600}
+.btn{background:var(--teal);color:#fff;box-shadow:none}.btn:hover{background:var(--teal-d)}
+.btn.ghost{background:#fff;color:var(--teal);border-color:var(--teal)}.btn.ghost:hover{background:var(--mint)}
+.btn.danger{background:#fff;color:var(--t-late);border:1px solid #f3b8b1}.btn.danger:hover{background:var(--t-late-bg)}
+.hero,.hero.alt{background:#fff;border:1.5px dashed #9cc3e8;border-radius:14px}.hero:hover{background:var(--mint);box-shadow:none}
+.hero h2{color:var(--pk)}.hero .ico{box-shadow:none;border:1px solid var(--bd)}
+th{background:#f5f8fc;color:var(--teal-d);font-weight:700}
+tbody tr:hover td{background:#f5f8fc}tr.row-late td{background:#fff6f5}
+.chip.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.sumbar{border-radius:12px;background:#f5f8fc}
+.prog i{background:linear-gradient(90deg,var(--teal),#5b9bd5)}
+.dl{background:#fff;border:1px solid var(--bd)}.dl.late{background:#fff6f5;border-color:#f3b8b1}.dl.soon{background:#fffaf0;border-color:#f7d9a3}
+#login{box-shadow:0 10px 30px -14px rgba(16,24,40,.25);border-radius:18px}#login:before,#login:after{display:none}
+#login h2{color:var(--pk)}.lg-round{box-shadow:0 0 0 5px var(--mint)}.lnk,.pwt{color:var(--teal)}
+.fld input,input,select,textarea{background:#fff}.fld input:focus{box-shadow:0 0 0 3px rgba(26,107,181,.18)}
 </style>
 </head>
 <body>
@@ -251,19 +312,22 @@ kbd{font:600 11px var(--font);padding:2px 7px;border:1px solid var(--bd2);border
 </header>
 
 <section id="login" class="hidden">
-  <div class="brand"><img src="logo.png" alt="Laguna Lăng Cô" onerror="this.remove()"><span class="wm">LAGUNA<small>LĂNG CÔ</small></span></div>
-  <h2>Đăng nhập</h2>
-  <p>Hệ thống theo dõi đặt cọc hợp đồng</p>
-  <input id="email" type="email" placeholder="Email" autocomplete="username">
-  <input id="password" type="password" placeholder="Mật khẩu" autocomplete="current-password" onkeydown="if(event.key==='Enter')login()">
-  <button class="btn" onclick="login()">Đăng nhập</button>
+  <img class="lg-round" src="logo-round.png" alt="Laguna Lăng Cô" onerror="this.remove()">
+  <h2>Quản lý đặt cọc hợp đồng</h2>
+  <p>Đăng nhập để theo dõi hợp đồng, công nợ cọc và nhắc hạn tự động</p>
+  <label class="fld">Email<input id="email" type="email" placeholder="ten@congty.vn" autocomplete="username"></label>
+  <label class="fld">Mật khẩu<span class="pw"><input id="password" type="password" placeholder="Nhập mật khẩu" autocomplete="current-password" onkeydown="if(event.key==='Enter')login()"><button type="button" class="pwt" id="pwBtn" onclick="togglePw()">Hiện</button></span></label>
+  <button class="btn lgbtn" id="loginBtn" onclick="login()">Đăng nhập</button>
   <div id="loginErr" class="err"></div>
+  <button type="button" class="lnk" onclick="resetPw()">Quên mật khẩu?</button>
+  <div class="lgfoot">Laguna Lăng Cô &middot; Hệ thống nội bộ</div>
 </section>
 
 <main id="app" class="hidden">
 
   <!-- TỔNG QUAN -->
   <div id="v-overview" class="view">
+    <div class="welcome" id="welcome"></div>
     <div class="heroes">
       <div class="hero" onclick="openUpload('contract')" ondragover="event.preventDefault()" ondrop="event.preventDefault();openUpload('contract');addFiles(event.dataTransfer.files)"><div><span class="ico"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></span><div><h2>Có hợp đồng mới?</h2><p>Thả file PDF/ảnh vào, hệ thống tự đọc và tự lưu hợp đồng cùng các đợt cọc.</p></div></div><span class="btn">Tải lên</span></div>
       <div class="hero alt" onclick="openUpload('bank')" ondragover="event.preventDefault()" ondrop="event.preventDefault();openUpload('bank');addFiles(event.dataTransfer.files)"><div><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></svg></span><div><h2>Đối soát sao kê</h2><p>Tải sao kê ngân hàng, hệ thống tự khớp tiền vào với hợp đồng và ghi nhận thu tiền.</p></div></div><span class="btn ghost">Tải sao kê</span></div>
@@ -304,6 +368,7 @@ kbd{font:600 11px var(--font);padding:2px 7px;border:1px solid var(--bd2);border
       <button class="btn" onclick="openUpload()">Tải hợp đồng lên</button>
     </div>
     <div class="toolbar" id="chips"></div>
+    <div class="sumbar" id="ctSum"></div>
     <div class="tw"><table>
       <thead><tr><th>Đối tác</th><th>Số HĐ</th><th class="r">Giá trị HĐ</th><th class="r">Cọc phải đóng</th><th class="r">Đã thu</th><th>Đã cọc / HĐ</th><th>Hạn cọc</th><th>Trạng thái</th><th></th></tr></thead>
       <tbody id="ctbody"></tbody>
@@ -484,15 +549,28 @@ function download(name, text) {
 
 /* ---------- Điều hướng ---------- */
 function show(v) {
-  view = v;
+  view = v; try { localStorage.setItem('lg_view', v); } catch (e) {}
   document.querySelectorAll('.view').forEach(el => el.classList.toggle('hidden', el.id !== 'v-' + v));
   document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
   renderAll();
 }
 
 /* ---------- Tổng quan ---------- */
+function renderWelcome() {
+  const el = $('welcome'); if (!el) return;
+  const h = new Date().getHours(), g = h < 11 ? 'Chào buổi sáng' : h < 14 ? 'Chào buổi trưa' : h < 18 ? 'Chào buổi chiều' : 'Chào buổi tối';
+  const dt = new Date().toLocaleDateString('vi-VN', {weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Asia/Ho_Chi_Minh'});
+  const nm = (auth.currentUser?.email || '').split('@')[0];
+  let msg = 'Đang tải dữ liệu...', btn = '';
+  if (loaded) {
+    const late = contracts.filter(c => st(c).k === 'late'), soon = contracts.filter(c => st(c).k === 'soon');
+    msg = late.length || soon.length ? `${late.length ? `<b class="r1">${late.length} hợp đồng quá hạn</b> (còn thiếu ${short(sum(late, remain))})` : ''}${late.length && soon.length ? ', ' : ''}${soon.length ? `<b class="r2">${soon.length} hợp đồng đến hạn trong 7 ngày</b>` : ''}.` : 'Không có hợp đồng nào quá hạn hay sắp đến hạn. Mọi thứ đang ổn.';
+    if (late.length) btn = '<button class="btn sm" onclick="chip=\'late\';show(\'contracts\')">Xem hợp đồng quá hạn</button>';
+  }
+  el.innerHTML = `<div><h2>${g}${nm ? ', ' + esc(nm) : ''}</h2><p>${dt} &middot; ${msg}</p></div>${btn}`;
+}
 function renderOverview() {
-  renderAuto();
+  renderAuto(); renderWelcome();
   if (!loaded) { $('kpis').innerHTML = '<div class="kpi sk"></div>'.repeat(5); return; }
   const tot = sum(contracts, c => c.totalValue), req = sum(contracts, c => c.depositAmount);
   const col = sum(contracts, paid), out = sum(contracts, remain);
@@ -513,8 +591,8 @@ function renderOverview() {
   const keys = Object.keys(months).sort();
   charts.m?.destroy();
   charts.m = new Chart($('cMonth'), {type: 'bar', data: {labels: keys.map(k => k.split('-').reverse().join('/')),
-    datasets: [{label: 'Cọc phải thu', data: keys.map(k => months[k].req), backgroundColor: '#cfeeea', borderRadius: 8, borderSkipped: false},
-               {label: 'Đã thu', data: keys.map(k => months[k].col), backgroundColor: '#f3a8c9', borderRadius: 8, borderSkipped: false}]},
+    datasets: [{label: 'Cọc phải thu', data: keys.map(k => months[k].req), backgroundColor: '#9cc3e8', borderRadius: 8, borderSkipped: false},
+               {label: 'Đã thu', data: keys.map(k => months[k].col), backgroundColor: '#f26522', borderRadius: 8, borderSkipped: false}]},
     options: {maintainAspectRatio: true, plugins: {legend: {position: 'bottom'}}, scales: {y: {ticks: {callback: v => short(v)}}}}});
 
   // Biểu đồ trạng thái
@@ -522,7 +600,7 @@ function renderOverview() {
   contracts.forEach(c => cnt[st(c).k]++);
   charts.s?.destroy();
   charts.s = new Chart($('cStatus'), {type: 'doughnut', data: {labels: ['Đã đủ', 'Sắp đến hạn', 'Chưa đến hạn', 'Quá hạn', 'Chưa có hạn'],
-    datasets: [{data: [cnt.paid, cnt.soon, cnt.future, cnt.late, cnt.nodue], backgroundColor: ['#9fe0c0', '#f9d79b', '#a9ddd8', '#f4a9c4', '#d5dede'], borderWidth: 3, borderColor: 'rgba(255,255,255,.9)', hoverOffset: 6}]},
+    datasets: [{data: [cnt.paid, cnt.soon, cnt.future, cnt.late, cnt.nodue], backgroundColor: ['#5fb98a', '#f7b267', '#9cc3e8', '#e5533d', '#d5dbe0'], borderWidth: 3, borderColor: 'rgba(255,255,255,.9)', hoverOffset: 6}]},
     options: {plugins: {legend: {position: 'bottom'}}, cutout: '66%'}});
 
   // Tuổi nợ
@@ -543,8 +621,8 @@ function renderOverview() {
   let cum = 0; const cumv = fk.map(k => cum += fm[k] || 0);
   charts.f?.destroy();
   charts.f = new Chart($('cFore'), {data: {labels: fk.map(k => k.split('-').reverse().join('/')), datasets: [
-    {type: 'bar', label: 'Dự kiến thu trong tháng', data: fk.map(k => fm[k] || 0), backgroundColor: '#8fd9d3', borderRadius: 8, borderSkipped: false},
-    {type: 'line', label: 'Luỹ kế', data: cumv, borderColor: '#e5007e', backgroundColor: '#e5007e', tension: .35, pointRadius: 3}]},
+    {type: 'bar', label: 'Dự kiến thu trong tháng', data: fk.map(k => fm[k] || 0), backgroundColor: '#9cc3e8', borderRadius: 8, borderSkipped: false},
+    {type: 'line', label: 'Luỹ kế', data: cumv, borderColor: '#f26522', backgroundColor: '#f26522', tension: .35, pointRadius: 3}]},
     options: {plugins: {legend: {position: 'bottom'}}, scales: {y: {ticks: {callback: v => short(v)}}}}});
 
   // Sắp đến hạn
@@ -575,6 +653,7 @@ function renderContracts() {
     return chip === 'all' || (chip === 'open' ? remain(c) > 0 : s.k === chip);
   }).sort(sorter);
   window._list = list;
+  $('ctSum').innerHTML = `<span>Đang hiển thị <b>${list.length}</b> / ${contracts.length} hợp đồng</span><span>Giá trị HĐ <b>${short(sum(list, c => c.totalValue))}</b></span><span>Đã thu <b>${short(sum(list, paid))}</b></span><span>Còn thiếu <b class="r1">${short(sum(list, remain))}</b></span>`;
   $('ctbody').innerHTML = list.map(c => { const s = st(c), pd = paid(c), r = pc(pd, c.totalValue); return `
     <tr class="${s.k === 'late' ? 'row-late' : ''}">
       <td><b>${esc(c.partner)}</b></td><td data-l="Số HĐ">${esc(c.contractNo)}</td>
@@ -842,10 +921,18 @@ document.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.ke
 
 /* ---------- Đăng nhập ---------- */
 function login() {
-  $('loginErr').textContent = '';
+  const b = $('loginBtn'), e = $('loginErr'); e.textContent = '';
+  if (!$('email').value.trim() || !$('password').value) { e.textContent = 'Vui lòng nhập email và mật khẩu.'; return; }
+  b.disabled = true; b.textContent = 'Đang đăng nhập...';
   auth.signInWithEmailAndPassword($('email').value.trim(), $('password').value)
-    .catch(err => $('loginErr').textContent = 'Đăng nhập thất bại: ' + err.message);
+    .catch(err => { e.textContent = /invalid|wrong|user-not-found|credential/.test(err.code || err.message) ? 'Email hoặc mật khẩu chưa đúng.' : /too-many/.test(err.code || '') ? 'Thử sai nhiều lần, vui lòng đợi ít phút rồi thử lại.' : 'Đăng nhập thất bại: ' + err.message; })
+    .finally(() => { b.disabled = false; b.textContent = 'Đăng nhập'; });
 }
+function togglePw() { const i = $('password'), h = i.type === 'password'; i.type = h ? 'text' : 'password'; $('pwBtn').textContent = h ? 'Ẩn' : 'Hiện'; }
+function resetPw() { const m = $('email').value.trim(), e = $('loginErr');
+  if (!m) { e.textContent = 'Nhập email vào ô phía trên rồi bấm lại "Quên mật khẩu".'; return; }
+  auth.sendPasswordResetEmail(m).then(() => { e.style.color = 'var(--grn)'; e.textContent = 'Đã gửi email đặt lại mật khẩu tới ' + m; })
+    .catch(() => { e.style.color = ''; e.textContent = 'Không gửi được email đặt lại mật khẩu, kiểm tra lại địa chỉ email.'; }); }
 auth.onAuthStateChanged(user => {
   $('login').classList.toggle('hidden', !!user);
   $('app').classList.toggle('hidden', !user);
@@ -859,7 +946,8 @@ auth.onAuthStateChanged(user => {
       renderAll();
     });
     unsubS?.(); unsubS = db.doc('settings/automation').onSnapshot(d => { S = d.data() || {}; renderAuto(); });
-    show('overview');
+    let v0 = 'overview'; try { v0 = localStorage.getItem('lg_view') || v0; } catch (e) {}
+    show($('v-' + v0) ? v0 : 'overview');
   } else { unsub?.(); unsubS?.(); unsub = unsubS = null; contracts = []; loaded = false; }
 });
 
