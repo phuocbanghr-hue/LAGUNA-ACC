@@ -37,6 +37,10 @@
    ```
    Sau khi xong, web chạy tại https://laguna-acc.web.app
 
+## Chạy trên GitHub Pages
+- `index.html` và logo ở thư mục gốc là bản sao của `public/` để GitHub Pages hiển thị. Khi sửa web, sửa cả hai nơi (hoặc chép lại từ `public/`).
+- Thêm `phuocbanghr-hue.github.io` vào Firebase Console > Authentication > Settings > Authorized domains, nếu không sẽ không đăng nhập được.
+
 ## Lưu ý
 - Thêm file `public/logo.png` nếu muốn hiện logo (không có thì hiện chữ LAGUNA).
 - Rules hiện cho mọi tài khoản đã đăng nhập đọc/ghi. Chỉ tạo tài khoản cho người cần dùng.
