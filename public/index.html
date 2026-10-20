@@ -415,7 +415,7 @@ tbody tr:hover td{background:#f5f8fc}tr.row-late td{background:#fff6f5}
         <label>Hạn thanh toán cọc <input name="dueDate" type="date" required></label>
         <label>Đã thu trước khi dùng sổ (số dư đầu) <input name="depositPaid" inputmode="numeric" placeholder="0"></label>
       </div>
-      <div><div class="toolbar" style="margin:0 0 8px"><b>Các đợt đặt cọc</b><small id="instSum"></small><span class="grow"></span><button type="button" class="btn ghost sm" onclick="addInst()">Thêm đợt</button></div><div id="instRows"></div></div>
+      <div><div class="toolbar" style="margin:0 0 8px"><b>Các đợt đặt cọc</b><small id="instSum"></small><span class="grow"></span><button type="button" class="btn ghost sm" onclick="newInst()">Thêm đợt</button></div><div id="instRows"></div></div>
       <div class="hint" id="pctHint"></div>
       <label>Email đối tác (để soạn / tự gửi nhắc cọc) <input name="partnerEmail" type="email" placeholder="ketoan@doitac.vn"></label>
       <label>Ghi chú <textarea name="note" rows="2"></textarea></label>
@@ -797,6 +797,8 @@ function addInst(i) { const r = document.createElement('div'); r.className = 'in
   r.innerHTML = `<input type="date" value="${i?.dueDate || ''}"><input inputmode="numeric" placeholder="Số tiền" value="${i?.amount ? num(i.amount).toLocaleString('vi-VN') : ''}"><button type="button" class="btn ghost sm" onclick="this.parentNode.remove();syncInst()">Xóa</button>`;
   r.children[1].addEventListener('input', e => { const v = parseMoney(e.target.value); e.target.value = v ? v.toLocaleString('vi-VN') : ''; });
   r.addEventListener('input', syncInst); $('instRows').append(r); }
+function newInst() { const f = dlgC.querySelector('form'), a = getInst(), dep = parseMoney(f.depositAmount.value), left = dep - sum(a, x => x.amount);
+  addInst({dueDate: a.length ? '' : f.dueDate.value, amount: a.length ? (left > 0 ? left : 0) : dep}); syncInst(); }
 const getInst = () => [...document.querySelectorAll('#instRows .inst')].map(r => ({dueDate: r.children[0].value, amount: parseMoney(r.children[1].value)})).filter(i => i.dueDate && i.amount).sort((a, b) => a.dueDate.localeCompare(b.dueDate));
 function syncInst() { const a = getInst(), f = dlgC.querySelector('form');
   $('instSum').textContent = a.length ? `${a.length} đợt · tổng ${fmt(sum(a, x => x.amount))}` : '';
@@ -837,7 +839,8 @@ async function runExtract() {
         createdAt: firebase.firestore.FieldValue.serverTimestamp(), updatedAt: firebase.firestore.FieldValue.serverTimestamp(), updatedBy: auth.currentUser?.email || ''});
       toast(`Đã tự lưu hợp đồng ${d.contractNo} · ${d.partner}`); show('contracts');
     } else { openNew(); fillFrom(d); if (dup) $('pctHint').textContent = `Hợp đồng ${d.contractNo} của ${d.partner} đã có trong hệ thống, hãy kiểm tra trước khi lưu.`; }
-  } catch (e) { $('upMsg').textContent = 'Không đọc được: ' + (e.message || e); }
+  } catch (e) { const c = String(e.code || ''), nf = /not-found|internal|unavailable|unauthenticated|functions\//.test(c) || /external|failed to fetch|internal|network/i.test(String(e.message || ''));
+    $('upMsg').textContent = nf ? 'Chưa kết nối được máy chủ đọc file (Firebase Functions chưa deploy, chưa bật gói Blaze, hoặc thiếu ANTHROPIC_API_KEY). Xem hướng dẫn trong README. Chi tiết: ' + (e.code || '') + ' ' + (e.message || e) : 'Không đọc được: ' + (e.message || e); }
   $('upBar').hidden = true; $('upGo').disabled = !upFiles.length;
 }
 
