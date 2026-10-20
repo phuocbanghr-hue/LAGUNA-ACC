@@ -291,6 +291,115 @@ tbody tr:hover td{background:#f5f8fc}tr.row-late td{background:#fff6f5}
 #login{box-shadow:0 10px 30px -14px rgba(16,24,40,.25);border-radius:18px}#login:before,#login:after{display:none}
 #login h2{color:var(--pk)}.lg-round{box-shadow:0 0 0 5px var(--mint)}.lnk,.pwt{color:var(--teal)}
 .fld input,input,select,textarea{background:#fff}.fld input:focus{box-shadow:0 0 0 3px rgba(26,107,181,.18)}
+
+/* ===== Cảnh báo đến hạn 7 ngày ===== */
+.alert7{margin-bottom:16px;border:1px solid #f7d9a3;border-left:5px solid var(--pk);background:#fffaf0;border-radius:14px;padding:4px 18px 8px}
+.a7h{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 0;color:var(--t-soon);font-size:15px}
+.a7h b:before{content:"!";display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--pk);color:#fff;font-size:13px;margin-right:8px}
+.a7r{display:grid;grid-template-columns:minmax(160px,1.6fr) 1.3fr 1fr auto;gap:10px;align-items:center;padding:9px 0;border-top:1px dashed #f0d4a6}
+.a7r .r{text-align:right}.a7r .acts .btn+.btn{margin-left:6px}
+@media(max-width:700px){.a7r{grid-template-columns:1fr 1fr}.a7r .acts{grid-column:1/-1;text-align:left}}
+.nb.amb{background:#e0870a}
+
+/* ===== Nhắc hạn toàn màn hình khi đăng nhập ===== */
+#dueGate{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;overflow:hidden;
+  background:var(--bg);background-image:radial-gradient(900px 420px at 0% -10%,var(--mint),transparent 70%),radial-gradient(800px 380px at 100% -5%,var(--blush),transparent 70%);
+  animation:gateIn .28s ease}
+@keyframes gateIn{from{opacity:0;transform:scale(1.01)}to{opacity:1;transform:none}}
+#dueGate .gh{padding:max(22px,env(safe-area-inset-top)) 28px 14px;max-width:980px;width:100%;margin:0 auto}
+#dueGate .gh .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--pk)}
+#dueGate .gh .eyebrow:before{content:"!";display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--pk);color:#fff;font-size:13px}
+#dueGate h2{margin:8px 0 4px;font-size:clamp(22px,3.4vw,32px);font-weight:700;letter-spacing:-.02em;color:var(--teal-d)}
+@media(prefers-color-scheme:dark){#dueGate h2{color:var(--p-h)}}
+#dueGate .gh p{margin:0;color:var(--mut);font-size:14px}
+#dueGate .gstats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+#dueGate .gs{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:12px 16px;box-shadow:var(--shadow)}
+#dueGate .gs small{display:block;color:var(--mut);font-size:12px}
+#dueGate .gs b{font-size:clamp(17px,2.6vw,24px);font-weight:700}
+#dueGate .gs.late b{color:var(--t-late)}#dueGate .gs.soon b{color:var(--t-soon)}
+#dueGate .gbody{flex:1;overflow:auto;padding:4px 28px 16px}
+#dueGate .gwrap{max-width:980px;margin:0 auto}
+#dueGate .gsec{margin:14px 0 8px;font-size:13px;font-weight:650;color:var(--mut);display:flex;align-items:center;gap:8px}
+#dueGate .gsec:after{content:"";flex:1;height:1px;background:var(--bd)}
+#dueGate .gcard{display:grid;grid-template-columns:minmax(170px,1.5fr) 1.1fr 1fr auto;gap:12px;align-items:center;background:var(--card);border:1px solid var(--bd);border-left:5px solid var(--amb);border-radius:16px;padding:12px 18px;margin-bottom:10px;box-shadow:var(--shadow)}
+#dueGate .gcard.late{border-left-color:var(--red)}
+#dueGate .gcard .nm b{font-size:15px}#dueGate .gcard .nm small{display:block;color:var(--mut)}
+#dueGate .gcard .dd small{display:block;color:var(--mut);margin-bottom:3px}
+#dueGate .gcard .am{text-align:right}#dueGate .gcard .am small{display:block;color:var(--mut)}#dueGate .gcard .am b{font-size:16px}
+#dueGate .gcard .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+#dueGate .gcard .acts .btn+.btn{margin-left:0}
+#dueGate .gf{border-top:1px solid var(--bd);background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(12px);padding:12px 28px max(12px,env(safe-area-inset-bottom))}
+#dueGate .gfin{max-width:980px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+#dueGate .gfin label{display:flex;align-items:center;gap:8px;color:var(--mut);font-size:13px;cursor:pointer;margin-right:auto}
+#dueGate .gfin input{width:auto;accent-color:var(--teal)}
+#dueGate .btn.lg{padding:11px 24px;font-size:14.5px}
+body.gate-open{overflow:hidden}
+@media(max-width:760px){
+  #dueGate .gh,#dueGate .gbody,#dueGate .gf{padding-left:16px;padding-right:16px}
+  #dueGate .gstats{grid-template-columns:1fr 1fr}#dueGate .gs.tot{grid-column:1/-1}
+  #dueGate .gcard{grid-template-columns:1fr 1fr}#dueGate .gcard .acts{grid-column:1/-1;justify-content:flex-start}
+}
+@media print{#dueGate{display:none!important}}
+
+/* ===== Nhắc hạn: bản nâng cấp ===== */
+#dueGate .gtop{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+#dueGate .gwin{display:inline-flex;gap:4px;padding:4px;border-radius:999px;background:var(--mint)}
+#dueGate .gwin button{border:none;background:none;color:var(--mut);padding:5px 14px;border-radius:999px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s}
+#dueGate .gwin button:hover{color:var(--tx)}
+#dueGate .gwin button.on{background:var(--teal);color:#fff}
+#dueGate .gstats .gs{position:relative;overflow:hidden}
+#dueGate .gstats .gs:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--teal)}
+#dueGate .gstats .gs.late:before{background:var(--red)}#dueGate .gstats .gs.soon:before{background:var(--amb)}
+#dueGate .gcard{grid-template-columns:72px minmax(160px,1.4fr) 1.2fr 1fr auto;animation:cardIn .35s ease both;animation-delay:calc(var(--i,0)*45ms)}
+@keyframes cardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#dueGate .gcard.today{border-left-color:var(--pk)}
+#dueGate .cd{display:grid;place-items:center;align-content:center;height:62px;border-radius:16px;background:var(--t-soon-bg);color:var(--t-soon);text-align:center;line-height:1.1}
+#dueGate .cd b{font-size:24px;font-weight:700;display:block}#dueGate .cd small{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+#dueGate .cd.late{background:var(--t-late-bg);color:var(--t-late)}
+#dueGate .cd.today{background:var(--pk);color:#fff}#dueGate .cd.today b{font-size:15px}
+#dueGate .cd.ok{background:var(--t-wait-bg);color:var(--t-wait)}
+#dueGate .gbar{height:6px;border-radius:99px;background:var(--bd);overflow:hidden;margin:6px 0 3px}
+#dueGate .gbar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--teal),var(--p));width:0;animation:barIn .7s .15s ease forwards}
+@keyframes barIn{to{width:var(--w)}}
+#dueGate .gcard .dd small.pr{margin:0}
+#dueGate .gempty{text-align:center;padding:48px 16px;color:var(--mut)}
+#dueGate .gempty b{display:block;color:var(--grn);font-size:18px;margin-bottom:6px}
+#bellBtn{position:relative}
+#bellBtn .bn{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;margin-left:6px;border-radius:99px;background:var(--pk);color:#fff;font-size:11px;font-weight:700}
+#bellBtn .bn:empty{display:none}
+@media(max-width:760px){
+  #dueGate .gcard{grid-template-columns:64px 1fr}
+  #dueGate .gcard .dd,#dueGate .gcard .am{grid-column:1/-1}#dueGate .gcard .am{text-align:left}
+  #dueGate .gcard .acts{grid-column:1/-1}
+  #dueGate .gfin label{width:100%}
+}
+
+/* ===== Nhắc hạn: lịch theo ngày, hoãn, chống nháy ===== */
+#toast{z-index:1100}
+#dueGate .gcard{animation:none}
+#dueGate.anim .gcard{animation:cardIn .35s ease both;animation-delay:calc(var(--i,0)*45ms)}
+#dueGate .gbar i{animation:none;width:var(--w)}
+#dueGate.anim .gbar i{width:0;animation:barIn .7s .15s ease forwards}
+#dueGate .gstrip{display:flex;gap:2px;align-items:stretch;height:118px;margin-top:14px;padding:10px 10px 6px;background:var(--card);border:1px solid var(--bd);border-radius:16px;box-shadow:var(--shadow);overflow-x:auto;scrollbar-width:thin}
+#dueGate .gday{flex:1 0 30px;display:grid;grid-template-rows:1fr auto;gap:4px;border:none;background:none;border-radius:10px;padding:2px 0;font:inherit;color:var(--mut);cursor:pointer;transition:background .15s}
+#dueGate .gday:hover{background:var(--mint)}
+#dueGate .gday.sel{background:var(--aqua);color:var(--tx)}
+#dueGate .gday .bar{display:flex;align-items:flex-end;justify-content:center}
+#dueGate .gday .bar i{display:block;width:60%;max-width:22px;min-width:12px;height:var(--h);border-radius:7px 7px 3px 3px;background:var(--bd2);transition:height .4s ease,background .15s}
+#dueGate .gday.has .bar i{background:var(--amb)}
+#dueGate .gday.hot .bar i{background:var(--pk)}
+#dueGate .gday.lt .bar i{background:var(--red)}
+#dueGate .gday .lb{display:block;font-size:12px;font-weight:650;line-height:1.1;text-align:center}
+#dueGate .gday .lb small{display:block;font-size:10px;font-weight:500;opacity:.8}
+#dueGate .gday.td .lb b{color:var(--pk)}
+#dueGate .gday.we .lb small{color:var(--red)}
+#dueGate .gday.gap{flex-basis:8px;max-width:8px;pointer-events:none}
+#dueGate .gfilt{min-height:26px;margin-top:8px;font-size:13px;color:var(--mut);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+#dueGate .gfilt .pill{display:inline-flex;align-items:center;gap:8px;padding:3px 6px 3px 12px;border-radius:999px;background:var(--aqua);color:var(--tx);font-weight:600}
+#dueGate .gfilt button{border:none;background:none;color:var(--teal-d);font:inherit;font-weight:600;cursor:pointer;text-decoration:underline;padding:0}
+#dueGate .gfilt .pill button{text-decoration:none;background:var(--card);border-radius:50%;width:20px;height:20px;line-height:20px;text-align:center}
+@media(prefers-color-scheme:dark){#dueGate .gfilt button{color:var(--p-h)}}
+@media(max-width:760px){#dueGate .gstrip{height:104px}}
 </style>
 </head>
 <body>
@@ -301,11 +410,12 @@ tbody tr:hover td{background:#f5f8fc}tr.row-late td{background:#fff6f5}
     <h1>Quản lý đặt cọc hợp đồng</h1>
     <span class="who" id="who"></span>
     <button class="btn ghost sm hidden noprint" id="kBtn" onclick="openK()">Tìm nhanh <kbd>Ctrl K</kbd></button>
+    <button class="btn ghost sm hidden noprint" id="bellBtn" onclick="showGate(true)" title="Xem lại nhắc hạn">🔔 Nhắc hạn<span class="bn" id="bellN"></span></button>
     <button class="btn ghost hidden noprint" id="logoutBtn" onclick="auth.signOut()">Đăng xuất</button>
   </div>
   <nav class="hidden" id="nav">
     <button class="on" data-v="overview" onclick="show('overview')">Tổng quan</button>
-    <button data-v="contracts" onclick="show('contracts')">Hợp đồng<span class="nb hidden" id="nbLate"></span></button>
+    <button data-v="contracts" onclick="show('contracts')">Hợp đồng<span class="nb hidden" id="nbLate"></span><span class="nb amb hidden" id="nbSoon"></span></button>
     <button data-v="partners" onclick="show('partners')">Đối tác</button>
     <button data-v="ledger" onclick="show('ledger')">Sổ thu tiền</button>
   </nav>
@@ -328,9 +438,10 @@ tbody tr:hover td{background:#f5f8fc}tr.row-late td{background:#fff6f5}
   <!-- TỔNG QUAN -->
   <div id="v-overview" class="view">
     <div class="welcome" id="welcome"></div>
+    <div id="alertO"></div>
     <div class="heroes">
-      <div class="hero" onclick="openUpload('contract')" ondragover="event.preventDefault()" ondrop="event.preventDefault();openUpload('contract');addFiles(event.dataTransfer.files)"><div><span class="ico"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></span><div><h2>Có hợp đồng mới?</h2><p>Thả file PDF/ảnh vào, hệ thống tự đọc và tự lưu hợp đồng cùng các đợt cọc.</p></div></div><span class="btn">Tải lên</span></div>
-      <div class="hero alt" onclick="openUpload('bank')" ondragover="event.preventDefault()" ondrop="event.preventDefault();openUpload('bank');addFiles(event.dataTransfer.files)"><div><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></svg></span><div><h2>Đối soát sao kê</h2><p>Tải sao kê ngân hàng, hệ thống tự khớp tiền vào với hợp đồng và ghi nhận thu tiền.</p></div></div><span class="btn ghost">Tải sao kê</span></div>
+      <div class="hero" onclick="openUpload('contract')" ondragover="event.preventDefault()" ondrop="event.preventDefault();openUpload('contract');addFiles(event.dataTransfer.files)"><div><span class="ico"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></span><div><h2>Có hợp đồng mới?</h2><p>Thả file Word, PDF hoặc ảnh vào, hệ thống đọc ngay trên máy bạn và điền sẵn form hợp đồng cùng các đợt cọc.</p></div></div><span class="btn">Tải lên</span></div>
+      <div class="hero alt" onclick="openUpload('bank')" ondragover="event.preventDefault()" ondrop="event.preventDefault();openUpload('bank');addFiles(event.dataTransfer.files)"><div><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></svg></span><div><h2>Đối soát sao kê</h2><p>Tải sao kê Excel/CSV từ internet banking, hệ thống tự khớp tiền vào với hợp đồng.</p></div></div><span class="btn ghost">Tải sao kê</span></div>
     </div>
     <div class="panel"><h3>Tự động hóa</h3><div id="autoPanel"></div></div>
     <div class="kpis" id="kpis"></div>
@@ -354,6 +465,7 @@ tbody tr:hover td{background:#f5f8fc}tr.row-late td{background:#fff6f5}
 
   <!-- HỢP ĐỒNG -->
   <div id="v-contracts" class="view hidden">
+    <div id="alertC"></div>
     <div class="toolbar">
       <input class="grow" id="search" placeholder="Tìm đối tác hoặc số hợp đồng..." oninput="renderContracts()">
       <select id="fPartner" onchange="renderContracts()"><option value="">Tất cả đối tác</option></select>
@@ -427,12 +539,12 @@ tbody tr:hover td{background:#f5f8fc}tr.row-late td{background:#fff6f5}
 <dialog id="dlgU">
   <div class="dlgh"><h3 id="dlgUTitle">Tải hợp đồng lên</h3><button type="button" class="btn ghost sm" onclick="dlgU.close()">Đóng</button></div>
   <div class="dlgb">
-    <label class="dz" ondragover="event.preventDefault()" ondrop="event.preventDefault();addFiles(event.dataTransfer.files)"><input type="file" multiple accept="image/*,application/pdf" hidden onchange="addFiles(this.files);this.value=''"><b id="dzT">Thả file hợp đồng vào đây</b><span>hoặc bấm để chọn · PDF hoặc ảnh, có thể chọn nhiều trang</span></label>
+    <label class="dz" ondragover="event.preventDefault()" ondrop="event.preventDefault();addFiles(event.dataTransfer.files)"><input type="file" multiple accept=".docx,.pdf,.xlsx,.xls,.csv,.tsv,image/*" hidden onchange="addFiles(this.files);this.value=''"><b id="dzT">Thả file hợp đồng vào đây</b><span id="dzS">hoặc bấm để chọn</span></label>
     <div id="upList" class="toolbar"></div>
     <div class="prog ind" id="upBar" hidden><i></i></div>
     <div class="hint" id="upMsg"></div>
   </div>
-  <div class="dlgf"><button class="btn ghost" onclick="dlgU.close()">Hủy</button><button class="btn" id="upGo" onclick="runExtract()" disabled>Đọc và tự động xử lý</button></div>
+  <div class="dlgf"><button class="btn ghost" onclick="dlgU.close()">Hủy</button><button class="btn" id="upGo" onclick="runExtract()" disabled>Đọc file</button></div>
 </dialog>
 
 <!-- Dialog: thu tiền -->
@@ -478,6 +590,27 @@ tbody tr:hover td{background:#f5f8fc}tr.row-late td{background:#fff6f5}
 <dialog id="dlgK"><input id="kq" placeholder="Gõ tên đối tác, số hợp đồng hoặc lệnh..." autocomplete="off" oninput="renderK()"
   onkeydown="if(event.key==='ArrowDown'){kSel=Math.min(kSel+1,kItems.length-1);drawK();event.preventDefault()}else if(event.key==='ArrowUp'){kSel=Math.max(kSel-1,0);drawK();event.preventDefault()}else if(event.key==='Enter'){runK(kSel)}">
   <div id="kl"></div></dialog>
+
+<div id="dueGate" class="hidden" role="alertdialog" aria-modal="true" aria-labelledby="gateTitle">
+  <div class="gh">
+    <div class="gtop">
+      <span class="eyebrow" id="gateEye">Nhắc hạn đặt cọc</span>
+      <div class="gwin" id="gateWin" role="group" aria-label="Khoảng thời gian"></div>
+    </div>
+    <h2 id="gateTitle"></h2>
+    <p id="gateSub"></p>
+    <div class="gstats" id="gateStats"></div>
+    <div class="gstrip" id="gateStrip" aria-label="Lịch hạn theo ngày"></div>
+    <div class="gfilt" id="gateFilt"></div>
+  </div>
+  <div class="gbody"><div class="gwrap" id="gateList"></div></div>
+  <div class="gf"><div class="gfin">
+    <label><input type="checkbox" id="gateSkip"> Hôm nay không hiện lại</label>
+    <button class="btn ghost sm" id="gateCopy" onclick="copyGate(this)">Sao chép danh sách</button>
+    <button class="btn ghost lg" id="gateAll">Mở danh sách hợp đồng</button>
+    <button class="btn lg" id="gateClose" onclick="closeGate()">Vào hệ thống</button>
+  </div></div>
+</div>
 
 <div id="toast"></div>
 
@@ -530,9 +663,18 @@ function st(c) {
   if (!due(c)) return {k: 'nodue', l: 'Chưa có hạn', c: 'wait'};
   const d = dayDiff(due(c), today());
   if (d < 0) return {k: 'late', l: `Quá hạn ${-d} ngày`, c: 'late', d: -d};
-  if (d <= 7) return {k: 'soon', l: `Còn ${d} ngày`, c: 'soon', d};
+  if (d <= 7) return {k: 'soon', l: d === 0 ? 'Đến hạn hôm nay' : `Còn ${d} ngày`, c: 'soon', d};
   return {k: 'future', l: `Còn ${d} ngày`, c: 'wait', d};
 }
+function dueNow(c) { const a = [...(c.installments || [])].filter(i => i.dueDate).sort((x, y) => x.dueDate.localeCompare(y.dueDate));
+  if (!a.length) return remain(c); let cum = 0; const p = paid(c); for (const i of a) { cum += num(i.amount); if (p < cum) return cum - p; } return remain(c); }
+function alertHTML() {
+  if (!loaded) return '';
+  const soon = contracts.filter(c => st(c).k === 'soon').sort((a, b) => due(a).localeCompare(due(b)));
+  if (!soon.length) return '';
+  return `<div class="alert7" role="alert"><div class="a7h"><b>${soon.length} khoản đặt cọc đến hạn trong 7 ngày tới</b><span>Cần thu ${fmt(sum(soon, dueNow))}</span></div>` +
+    soon.map(c => `<div class="a7r"><div><b>${esc(c.partner)}</b> <small>· ${esc(c.contractNo)}</small></div><div>Hạn ${fd(due(c))} <span class="tag soon">${st(c).l}</span></div><div class="r"><b>${fmt(dueNow(c))}</b></div>
+      <div class="acts"><button class="btn sm" onclick="openPay('${c.id}')">Thu tiền</button>${c.partnerEmail ? `<button class="btn sm ghost" onclick="mailPartner('${c.id}')">Nhắc đối tác</button>` : ''}</div></div>`).join('') + '</div>'; }
 function toast(msg, act) { const t = $('toast'); t.textContent = msg;
   if (act) { const b = document.createElement('button'); b.textContent = act.label; b.onclick = () => { act.fn(); t.classList.remove('show'); }; t.append(b); }
   t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), act ? 7000 : 2400); }
@@ -784,11 +926,14 @@ async function delPayment(cid, pid) {
 
 /* ---------- Render tổng ---------- */
 function renderAll() {
+  const ah = alertHTML(); ['alertO', 'alertC'].forEach(id => { const el = $(id); if (el) el.innerHTML = ah; });
+  const ns = contracts.filter(c => st(c).k === 'soon').length; $('nbSoon').textContent = ns; $('nbSoon').classList.toggle('hidden', !ns);
   const nl = contracts.filter(c => st(c).k === 'late').length; $('nbLate').textContent = nl; $('nbLate').classList.toggle('hidden', !nl);
   if (view === 'overview') renderOverview();
   if (view === 'contracts') renderContracts();
   if (view === 'partners') renderPartners();
   if (view === 'ledger') renderLedger();
+  updateBell();
 }
 
 /* ---------- Các đợt cọc ---------- */
@@ -809,38 +954,233 @@ function instTL(c) { const a = [...(c.installments || [])].sort((x, y) => x.dueD
     const cl = full ? 'ok' : d < 0 ? 'late' : d <= 7 ? 'soon' : 'wait', lb = full ? 'Đã đủ' : u > 0 ? 'Đã thu ' + short(u) : d < 0 ? `Quá hạn ${-d} ngày` : `Còn ${d} ngày`;
     return `<div class="step ${cl}"><i></i><b>Đợt ${k + 1}</b><span>${fd(i.dueDate)}</span><span>${fmt(i.amount)}</span><em>${lb}</em></div>`; }).join('') + '</div>'; }
 
-/* ---------- Tải hợp đồng & tự điền ---------- */
-const fns = firebase.app().functions('asia-southeast1');
-let upFiles = [];
-let upMode = 'contract';
-function openUpload(mode) { upMode = mode || 'contract'; upFiles = []; renderUp(); $('upMsg').textContent = '';
-  $('dlgUTitle').textContent = upMode === 'bank' ? 'Tải sao kê ngân hàng' : 'Tải hợp đồng lên';
-  $('dzT').textContent = upMode === 'bank' ? 'Thả file sao kê / giấy báo có vào đây' : 'Thả file hợp đồng vào đây';
+/* ---------- Tải hợp đồng & tự điền (đọc ngay trên trình duyệt, không dùng máy chủ / AI) ---------- */
+const fns = firebase.app().functions('asia-southeast1'); // chỉ còn dùng cho nút "Gửi nhắc ngay" (email)
+let upFiles = [], upMode = 'contract', ocrW = null, ocrLabel = '';
+const OCR_MAX_PAGES = 12;
+const LIBS = {
+  mammoth: 'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js',
+  pdfjs: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
+  xlsx: 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
+  tess: 'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.0.4/tesseract.min.js'
+};
+const PDF_WORKER = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+const libP = {};
+const loadLib = k => libP[k] || (libP[k] = new Promise((ok, no) => { const s = document.createElement('script'); s.src = LIBS[k]; s.onload = ok;
+  s.onerror = () => { delete libP[k]; no(new Error('Không tải được thư viện đọc file (' + k + '). Kiểm tra kết nối mạng rồi thử lại.')); }; document.head.append(s); }));
+const setMsg = t => { $('upMsg').textContent = t; };
+const kindOf = f => { const e = (f.name.split('.').pop() || '').toLowerCase();
+  if (e === 'docx') return 'docx'; if (e === 'doc') return 'doc'; if (e === 'pdf' || f.type === 'application/pdf') return 'pdf';
+  if (['xlsx', 'xls', 'xlsm', 'csv', 'tsv'].includes(e)) return 'sheet'; if (/^image\//.test(f.type) || ['jpg', 'jpeg', 'png', 'webp', 'bmp'].includes(e)) return 'img'; return ''; };
+function openUpload(mode) { upMode = mode || 'contract'; upFiles = []; renderUp(); setMsg('');
+  const bank = upMode === 'bank';
+  $('dlgUTitle').textContent = bank ? 'Tải sao kê ngân hàng' : 'Tải hợp đồng lên';
+  $('dzT').textContent = bank ? 'Thả file sao kê vào đây' : 'Thả file hợp đồng vào đây';
+  $('dzS').textContent = bank ? 'hoặc bấm để chọn · nên dùng Excel / CSV tải từ internet banking (chính xác nhất). PDF hoặc ảnh chỉ đọc được ở mức tạm.' : 'hoặc bấm để chọn · Word (.docx), PDF hoặc ảnh chụp. Có thể chọn nhiều trang của cùng một hợp đồng.';
   if (!dlgU.open) dlgU.showModal(); }
-function addFiles(l) { upFiles.push(...[...l].filter(f => /^image\/|application\/pdf/.test(f.type))); renderUp(); }
+function addFiles(l) { const bad = []; [...l].forEach(f => { const k = kindOf(f); if (!k) bad.push(f.name); else if (k === 'doc') bad.push(f.name + ' (file .doc cũ, hãy lưu lại thành .docx)'); else upFiles.push(f); });
+  renderUp(); if (bad.length) setMsg('Bỏ qua file không hỗ trợ: ' + bad.join(', ')); }
 function renderUp() { $('upList').innerHTML = upFiles.map((f, i) => `<span class="chip on">${esc(f.name)} <b style="cursor:pointer" onclick="upFiles.splice(${i},1);renderUp()">×</b></span>`).join(''); $('upGo').disabled = !upFiles.length; }
-const b64 = f => new Promise(r => { const x = new FileReader(); x.onload = () => r(x.result.split(',')[1]); x.readAsDataURL(f); });
-const shrink = f => new Promise(res => { const im = new Image(); im.onload = () => { const k = Math.min(1, 2000 / Math.max(im.width, im.height)), c = document.createElement('canvas');
-  c.width = im.width * k; c.height = im.height * k; c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(im.src); res(c.toDataURL('image/jpeg', .85).split(',')[1]); }; im.src = URL.createObjectURL(f); });
+
+/* --- Đọc chữ từ từng loại file --- */
+async function docxText(f) {
+  await loadLib('mammoth');
+  const r = await mammoth.convertToHtml({arrayBuffer: await f.arrayBuffer()});
+  const doc = new DOMParser().parseFromString(r.value, 'text/html');
+  doc.querySelectorAll('tr').forEach(tr => { const p = document.createElement('p'); p.textContent = [...tr.children].map(c => c.textContent.replace(/\s+/g, ' ').trim()).join(' | '); tr.replaceWith(p); });
+  doc.querySelectorAll('br').forEach(b => b.replaceWith('\n'));
+  return {text: [...doc.body.querySelectorAll('p,li,h1,h2,h3,h4,h5,h6')].map(e => e.textContent).join('\n'), ocr: 0};
+}
+async function pdfDoc(f) {
+  await loadLib('pdfjs');
+  if (!pdfjsLib.GlobalWorkerOptions.workerSrc) { const t = await (await fetch(PDF_WORKER)).text(); pdfjsLib.GlobalWorkerOptions.workerSrc = URL.createObjectURL(new Blob([t], {type: 'text/javascript'})); }
+  return pdfjsLib.getDocument({data: new Uint8Array(await f.arrayBuffer())}).promise;
+}
+function pageLines(items) {
+  const rows = [];
+  items.filter(i => i.str && i.str.trim()).forEach(i => { const y = i.transform[5]; let r = rows.find(r => Math.abs(r.y - y) < 3); if (!r) rows.push(r = {y, a: []}); r.a.push({x: i.transform[4], w: i.width, s: i.str}); });
+  rows.sort((a, b) => b.y - a.y);
+  return rows.map(r => { r.a.sort((a, b) => a.x - b.x); let out = '', end = null;
+    r.a.forEach(t => { if (end !== null) out += t.x - end > 18 ? ' | ' : t.x - end > 1 ? ' ' : ''; out += t.s; end = t.x + t.w; }); return out; }).join('\n');
+}
+async function ocr(src) {
+  await loadLib('tess');
+  if (!ocrW) ocrW = await Tesseract.createWorker('vie', 1, {logger: m => { if (m.status === 'recognizing text') setMsg(`${ocrLabel} · đang nhận dạng chữ ${Math.round(m.progress * 100)}%`); else if (/load|init/.test(m.status)) setMsg(`${ocrLabel} · đang tải dữ liệu tiếng Việt (lần đầu hơi lâu)...`); }});
+  return (await ocrW.recognize(src)).data.text;
+}
+async function pdfText(f) {
+  const pdf = await pdfDoc(f), out = []; let scanned = 0;
+  for (let p = 1; p <= pdf.numPages; p++) {
+    setMsg(`${f.name} · đọc trang ${p}/${pdf.numPages}...`);
+    const pg = await pdf.getPage(p), t = pageLines((await pg.getTextContent()).items);
+    if (t.replace(/\s/g, '').length >= 30) { out.push(t); continue; }
+    if (p > OCR_MAX_PAGES) continue;
+    ocrLabel = `${f.name} · trang ${p}/${pdf.numPages}`;
+    const vp = pg.getViewport({scale: 2.2}), cv = document.createElement('canvas'); cv.width = vp.width; cv.height = vp.height;
+    await pg.render({canvasContext: cv.getContext('2d'), viewport: vp}).promise; out.push(await ocr(cv)); scanned++;
+  }
+  return {text: out.join('\n'), ocr: scanned};
+}
+async function extractText(f) {
+  const k = kindOf(f); let r;
+  if (k === 'docx') r = await docxText(f); else if (k === 'pdf') r = await pdfText(f);
+  else if (k === 'img') { ocrLabel = f.name; r = {text: await ocr(f), ocr: 1}; } else throw new Error(`Không đọc được loại file của "${f.name}".`);
+  return {text: r.text.normalize('NFC'), ocr: r.ocr};
+}
+
+/* --- Tiện ích nhận dạng chữ / số / ngày --- */
+function fold(s) { return s.replace(/[^\u0000-\u007f]/g, ch => { if (/[đĐ]/.test(ch)) return 'd'; const n = ch.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); return n.length === 1 ? n : '?'; }).toLowerCase(); }
+const iso = (y, m, d) => (m >= 1 && m <= 12 && d >= 1 && d <= 31 && y >= 2000 && y <= 2100) ? `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}` : '';
+function findDates(s) { const re = /(?<!\d)(\d{1,2})\s*[\/\-.]\s*(\d{1,2})\s*[\/\-.]\s*(20\d{2})(?!\d)|ngày\s*(\d{1,2})\s*tháng\s*(\d{1,2})\s*năm\s*(20\d{2})/gi, a = []; let m;
+  while ((m = re.exec(s))) { const v = m[1] ? iso(+m[3], +m[2], +m[1]) : iso(+m[6], +m[5], +m[4]); if (v) a.push({iso: v, i: m.index, e: m.index + m[0].length}); } return a; }
+function findMoney(s) { s = s.replace(/(?<!\d)(\d{1,2})\s*[\/\-.]\s*(\d{1,2})\s*[\/\-.]\s*(20\d{2})(?!\d)/g, ' ');
+  const a = []; let m; const r1 = /(\d+(?:[.,]\d+)?)\s*(tỷ|tỉ|triệu)\b/gi;
+  while ((m = r1.exec(s))) { const n = parseFloat(m[1].replace(',', '.')); a.push({v: Math.round(n * (/tr/i.test(m[2]) ? 1e6 : 1e9)), i: m.index}); }
+  const r2 = /(?<![\d.,])(\d{1,3}(?:[.,]\d{3})+|\d{6,})(?![\d])/g;
+  while ((m = r2.exec(s))) a.push({v: Number(m[1].replace(/[.,]/g, '')), i: m.index});
+  return a.filter(x => x.v >= 100000).sort((x, y) => x.i - y.i).map(x => x.v); }
+const lineAt = (T, i) => { const s = T.lastIndexOf('\n', i) + 1; let e = T.indexOf('\n', i); if (e < 0) e = T.length; return {s, e, t: T.slice(s, e)}; };
+function occurrences(F, labels) { const r = []; labels.forEach(l => { let i = -1; while ((i = F.indexOf(l, i + 1)) >= 0) r.push({i, l}); }); return r.sort((a, b) => a.i - b.i); }
+function moneyAfter(T, i, len) { const ln = lineAt(T, i); let m = findMoney(T.slice(i + len, ln.e)); if (m.length) return m;
+  const nx = lineAt(T, Math.min(ln.e + 1, T.length - 1)); return ln.e + 1 < T.length ? findMoney(nx.t) : []; }
+const CO_STOP = /\s+(?:Địa chỉ|Trụ sở|Mã số|MST|Đại diện|Điện thoại|ĐT|Số tài khoản|Tài khoản|Do\s|Ông|Bà|Sau đây|\(|Giấy|Email|E-mail|Fax|Website|Hotline)/i;
+function partyName(seg) {
+  let m = seg.match(/(?:Tên(?:\s+(?:công ty|đơn vị|doanh nghiệp|tổ chức|khách hàng))?|Họ và tên|Họ tên)\s*[:：]\s*([^\n|]{3,140})/i)
+       || seg.match(/((?:TỔNG CÔNG TY|CÔNG TY|Công ty|CTY|Cty|DOANH NGHIỆP|Doanh nghiệp|HỢP TÁC XÃ|Hợp tác xã|NGÂN HÀNG|Ngân hàng|TRƯỜNG|Trường|VĂN PHÒNG|Văn phòng|CHI NHÁNH|Chi nhánh)[^\n|:;]{3,130})/)
+       || seg.match(/((?:Ông|Bà|ÔNG|BÀ)\s+[^\n|,;:(]{3,50})/);
+  if (!m) return ''; let n = m[1].trim(); const c = n.search(CO_STOP); if (c > 2) n = n.slice(0, c);
+  return n.replace(/[\s,;:.\-–]+$/, '').replace(/^["“”']+|["“”']+$/g, '').trim(); }
+
+/* --- Phân tích hợp đồng theo nhãn cố định --- */
+function parseContract(raw) {
+  const T = raw.replace(/\r/g, '').replace(/[ \t\u00a0]+/g, ' ').replace(/ *\n */g, '\n'), F = fold(T);
+  const d = {partner: '', partnerEmail: '', contractNo: '', totalValue: 0, depositAmount: 0, dueDate: '', installments: [], note: ''};
+
+  // Số hợp đồng
+  for (const re of [/hop dong (?:kinh te |mua ban |dich vu |hop tac )?(?:so|no\.?)\s*[:.]?\s*([a-z0-9][a-z0-9\/\-_.]*[a-z0-9])/, /\bso\s*(?:hop dong|hd)\s*[:.]?\s*([a-z0-9][a-z0-9\/\-_.]*[a-z0-9])/, /\bso\s*[:.]\s*([a-z0-9][a-z0-9\/\-_.]*[a-z0-9])/]) {
+    const m = re.exec(F); if (m && /\d/.test(m[1])) { d.contractNo = T.substr(m.index + m[0].length - m[1].length, m[1].length).toUpperCase(); break; } }
+
+  // Đối tác: Bên A / Bên B, bỏ qua bên là Laguna
+  const rA = /(?:^|\n)\s*(?:\d+[.)]\s*)?\(?ben\s*a\b/g, rB = /(?:^|\n)\s*(?:\d+[.)]\s*)?\(?ben\s*b\b/g;
+  const ia = (rA.exec(F) || {index: -1}).index, ib = (rB.exec(F) || {index: -1}).index;
+  const endRe = /dieu\s*1\b|hai ben (?:da )?(?:thoa thuan|dong y|cung)|sau day goi la/g;
+  const segOf = s => { if (s < 0) return ''; endRe.lastIndex = s + 6; const e = endRe.exec(F); return T.slice(s, Math.min(s + 800, e && e.index > s + 20 ? e.index : s + 800)); };
+  const segB = segOf(ib), segA = ia >= 0 ? T.slice(ia, ib > ia ? ib : ia + 800) : '';
+  const nA = partyName(segA), nB = partyName(segB);
+  const isLag = n => /laguna/.test(fold(n));
+  d.partner = isLag(nA) && nB ? nB : isLag(nB) && nA ? nA : (nB || nA);
+  if (isLag(d.partner)) d.partner = '';
+  if (!d.partner) { const m = T.match(/((?:CÔNG TY|Công ty)[^\n|:;,]{4,110})/g); const o = (m || []).map(x => x.replace(CO_STOP, '').trim()).find(x => !isLag(x)); if (o) d.partner = o.split(CO_STOP)[0].trim(); }
+  const em = (segB || T).match(/[\w.+-]+@[\w-]+(?:\.[\w-]+)+/); if (em && !/laguna/i.test(em[0])) d.partnerEmail = em[0];
+
+  // Giá trị hợp đồng: lấy số lớn nhất đứng sau các nhãn "giá trị hợp đồng"
+  const totals = []; occurrences(F, ['tong gia tri hop dong', 'gia tri hop dong', 'tong gia tri', 'gia hop dong', 'tong tien hop dong', 'tong gia tri thanh toan', 'tong thanh toan', 'tong cong']).forEach(o => totals.push(...moneyAfter(T, o.i, o.l.length)));
+  if (totals.length) d.totalValue = Math.max(...totals);
+
+  // Tiền đặt cọc
+  const depLabels = ['so tien dat coc', 'tien dat coc', 'tien coc', 'dat coc', 'bao dam thuc hien hop dong', 'bao dam hop dong'];
+  const depOcc = occurrences(F, depLabels); let pct = 0, dep = 0;
+  for (const o of depOcc) { const ln = lineAt(T, o.i), mo = moneyAfter(T, o.i, o.l.length).filter(v => !d.totalValue || v < d.totalValue);
+    if (mo.length && !dep) dep = mo[0];
+    const pm = T.slice(o.i, ln.e + 120).match(/(\d+(?:[.,]\d+)?)\s*%/); if (pm && !pct) pct = parseFloat(pm[1].replace(',', '.')); }
+  if (!dep && pct && d.totalValue) dep = Math.round(d.totalValue * pct / 100);
+  d.depositAmount = dep;
+
+  // Các đợt đặt cọc: "Đợt 1 ... số tiền ... ngày ..."
+  const marks = []; const rm = /(?:dot|lan)\s*(?:thu\s*)?(\d{1,2})\b/g; let mm;
+  while ((mm = rm.exec(F))) marks.push({i: mm.index, n: +mm[1]});
+  marks.forEach((mk, k) => { const nxt = marks[k + 1] ? marks[k + 1].i : T.length, e = Math.min(nxt, mk.i + 320);
+    if (!/coc/.test(F.slice(Math.max(0, mk.i - 250), mk.i + 320))) return;
+    const seg = T.slice(mk.i, e), dt = findDates(seg)[0], mo = findMoney(seg).filter(v => !d.totalValue || v < d.totalValue)[0];
+    if (dt && mo && !d.installments.some(x => x.dueDate === dt.iso && x.amount === mo)) d.installments.push({dueDate: dt.iso, amount: mo}); });
+  d.installments.sort((a, b) => a.dueDate.localeCompare(b.dueDate));
+  if (d.installments.length) { d.depositAmount = sum(d.installments, x => x.amount); d.dueDate = d.installments[0].dueDate; }
+
+  // Hạn cọc khi không có bảng đợt
+  if (!d.dueDate) { const cue = /cham nhat|truoc ngay|han thanh toan|han cuoi|khong muon hon/;
+    for (const o of depOcc) { const win = T.slice(o.i, o.i + 360), fw = F.slice(o.i, o.i + 360), ds = findDates(win);
+      const hit = ds.find(x => cue.test(fw.slice(Math.max(0, x.i - 70), x.i))) || ds[0]; if (hit) { d.dueDate = hit.iso; break; } }
+    if (!d.dueDate) { const all = findDates(T)[0], rel = depOcc.map(o => F.slice(o.i, o.i + 360).match(/(?:trong vong|trong thoi han|sau)\s*(\d{1,3})\s*(?:\(.*?\))?\s*ngay(?: lam viec)?\s*(?:ke tu|tu)\s*(?:ngay\s*)?(?:ky|hop dong|nhan)/)).find(Boolean);
+      if (all && rel) { const dt = new Date(all.iso + 'T00:00:00Z'); dt.setUTCDate(dt.getUTCDate() + +rel[1]); d.dueDate = dt.toISOString().slice(0, 10); d.note = `Hạn cọc tính tự động: ngày ký ${fd(all.iso)} + ${rel[1]} ngày. Hãy kiểm tra lại.`; } } }
+
+  d.missing = [['partner', 'Đối tác'], ['contractNo', 'Số hợp đồng'], ['totalValue', 'Giá trị hợp đồng'], ['depositAmount', 'Tiền cọc'], ['dueDate', 'Hạn cọc']].filter(([k]) => !d[k]).map(x => x[1]);
+  return d;
+}
+
+/* --- Sao kê: Excel / CSV (chính xác) và PDF / ảnh (tạm) --- */
+function parseCSV(text) { const first = text.split('\n').slice(0, 15).join('\n'), cnt = c => (first.match(new RegExp(c === '\t' ? '\t' : '\\' + c, 'g')) || []).length;
+  const sep = [';', '\t', ','].sort((a, b) => cnt(b) - cnt(a))[0], rows = []; let row = [], cur = '', q = false;
+  for (let i = 0; i < text.length; i++) { const ch = text[i];
+    if (q) { if (ch === '"') { if (text[i + 1] === '"') { cur += '"'; i++; } else q = false; } else cur += ch; }
+    else if (ch === '"') q = true; else if (ch === sep) { row.push(cur); cur = ''; }
+    else if (ch === '\n' || ch === '\r') { if (ch === '\r' && text[i + 1] === '\n') i++; row.push(cur); rows.push(row); row = []; cur = ''; }
+    else cur += ch; }
+  if (cur || row.length) { row.push(cur); rows.push(row); } return rows; }
+async function sheetRows(f) {
+  if (/\.(csv|tsv)$/i.test(f.name)) { const buf = await f.arrayBuffer(); let t = new TextDecoder('utf-8').decode(buf); if (t.includes('\ufffd')) t = new TextDecoder('windows-1258').decode(buf); return [parseCSV(t.replace(/^\ufeff/, ''))]; }
+  await loadLib('xlsx'); const wb = XLSX.read(await f.arrayBuffer(), {type: 'array'});
+  return wb.SheetNames.map(n => XLSX.utils.sheet_to_json(wb.Sheets[n], {header: 1, raw: true, defval: ''})); }
+function dateCell(v) { if (typeof v === 'number' && v > 30000 && v < 80000) { const d = new Date(Math.floor(v - 25569) * 864e5); return iso(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()); }
+  const s = String(v || '').trim(); let m = s.match(/(20\d{2})-(\d{2})-(\d{2})/); if (m) return iso(+m[1], +m[2], +m[3]);
+  m = s.match(/(\d{1,2})\s*[\/\-.]\s*(\d{1,2})\s*[\/\-.]\s*(\d{4}|\d{2})(?!\d)/); if (m) return iso(m[3].length === 2 ? 2000 + +m[3] : +m[3], +m[2], +m[1]); return ''; }
+function moneyCell(v) { if (typeof v === 'number') return v; let s = String(v ?? '').trim(); if (!s) return 0; const neg = /^[-(−]/.test(s); s = s.replace(/[^\d.,]/g, ''); if (!s) return 0;
+  const lc = s.lastIndexOf(','), ld = s.lastIndexOf('.'); let n;
+  if (lc >= 0 && ld >= 0) n = Number(lc > ld ? s.replace(/\./g, '').replace(',', '.') : s.replace(/,/g, ''));
+  else if (lc >= 0 || ld >= 0) { const p = s.split(lc >= 0 ? ',' : '.'); n = Number(p.length > 2 || p[p.length - 1].length === 3 ? p.join('') : p.join('.')); }
+  else n = Number(s);
+  return neg ? -n : n; }
+function bankFromRows(rows) {
+  let h = -1, c = {};
+  for (let i = 0; i < Math.min(rows.length, 60) && h < 0; i++) { const x = {};
+    rows[i].forEach((v, j) => { const t = norm(v); if (!t || t.length > 45) return;
+      if (x.date == null && /^(ngay|date)|ngaygiaodich|ngayhachtoan|transactiondate/.test(t)) x.date = j;
+      else if (x.cr == null && /ghico|credit|tienvao|sotienco|phatsinhco|^co$/.test(t)) x.cr = j;
+      else if (x.dr == null && /ghino|debit|tienra|sotienno|phatsinhno|^no$/.test(t)) x.dr = j;
+      else if (x.am == null && /^(sotien|amount|giatri|sotiengiaodich)$/.test(t)) x.am = j;
+      else if (x.desc == null && /noidung|diengiai|mota|description|remark|chitiet|detail|narrative/.test(t)) x.desc = j;
+      else if (x.ref == null && /thamchieu|sochungtu|magd|magiaodich|sogiaodich|reference|^ref/.test(t)) x.ref = j; });
+    if (x.date != null && (x.cr != null || x.am != null)) { h = i; c = x; } }
+  if (h < 0) return null;
+  const out = [];
+  for (const r of rows.slice(h + 1)) { const date = dateCell(r[c.date]); if (!date) continue;
+    const amt = Math.round(c.cr != null ? Math.max(0, moneyCell(r[c.cr])) : Math.max(0, moneyCell(r[c.am]))); if (!amt) continue;
+    const desc = String(c.desc != null ? r[c.desc] : r.filter((v, j) => j !== c.date && typeof v === 'string' && v.length > 8).join(' ')).replace(/\s+/g, ' ').trim();
+    out.push({date, amount: amt, description: desc, ref: c.ref != null ? String(r[c.ref] ?? '').trim() : ''}); }
+  return out; }
+function bankFromText(text) { const out = [];
+  text.split('\n').forEach(ln => { const dt = findDates(ln)[0], pm = ln.match(/\+\s*(\d{1,3}(?:[.,]\d{3})+|\d{5,})/);
+    if (dt && pm) out.push({date: dt.iso, amount: Number(pm[1].replace(/[.,]/g, '')), description: ln.replace(/\s+/g, ' ').trim(), ref: ''}); });
+  return out; }
+
+/* --- Nút "Đọc và tự động xử lý" --- */
 async function runExtract() {
-  $('upGo').disabled = true; $('upBar').hidden = false; $('upMsg').textContent = 'Đang đọc file, vui lòng chờ khoảng 10–30 giây...';
+  $('upGo').disabled = true; $('upBar').hidden = false; setMsg('Đang đọc file...');
+  const bank = upMode === 'bank';
   try {
-    const files = []; for (const f of upFiles) files.push(f.type === 'application/pdf' ? {mediaType: f.type, data: await b64(f)} : {mediaType: 'image/jpeg', data: await shrink(f)});
-    if (sum(files, x => x.data.length) > 9e6) throw new Error('File quá nặng (tối đa khoảng 7MB), hãy chọn ít trang hơn.');
-    const bank = upMode === 'bank';
-    const {data: d} = await fns.httpsCallable(bank ? 'extractPayments' : 'extractContract', {timeout: 150000})({files});
+    if (bank) {
+      const txs = []; let sheetFail = false;
+      for (const f of upFiles) {
+        if (kindOf(f) === 'sheet') { let got = null; for (const rows of await sheetRows(f)) { got = bankFromRows(rows); if (got) break; } if (got) txs.push(...got); else sheetFail = true; }
+        else txs.push(...bankFromText((await extractText(f)).text));
+      }
+      if (!txs.length) throw new Error(sheetFail ? 'Không tìm thấy cột Ngày / Số tiền ghi có trong file Excel. Hãy kiểm tra file đã tải đúng là sao kê chi tiết giao dịch.' : 'Không nhận ra giao dịch tiền vào nào. Với PDF/ảnh, hãy tải sao kê dạng Excel hoặc CSV từ internet banking để đọc chính xác.');
+      dlgU.close(); return openMatches(txs);
+    }
+    let text = '', ocrN = 0;
+    for (const f of upFiles) { if (kindOf(f) === 'sheet') throw new Error('File Excel/CSV dùng cho sao kê. Với hợp đồng, hãy chọn Word, PDF hoặc ảnh.'); const r = await extractText(f); text += '\n' + r.text; ocrN += r.ocr; }
+    if (text.replace(/\s/g, '').length < 40) throw new Error('Không đọc được chữ trong file. Nếu là ảnh mờ hoặc nghiêng, hãy chụp lại rõ hơn hoặc dùng nút "Nhập tay".');
+    const d = parseContract(text);
     dlgU.close();
-    if (bank) return openMatches(d.transactions || []);
     const dup = contracts.find(x => d.contractNo && x.contractNo === d.contractNo && x.partner === d.partner);
     const first = (d.installments || [])[0]?.dueDate || d.dueDate;
-    if (S.autoSave !== false && !dup && d.partner && d.contractNo && num(d.depositAmount) && first) {
-      await db.collection('contracts').add({partner: d.partner, contractNo: d.contractNo, totalValue: num(d.totalValue), depositAmount: num(d.depositAmount),
+    if (S.autoSave === true && !ocrN && !dup && !d.missing.length) {
+      await db.collection('contracts').add({partner: d.partner, contractNo: d.contractNo, totalValue: num(d.totalValue), depositAmount: num(d.depositAmount), partnerEmail: d.partnerEmail || '',
         depositPaid: 0, dueDate: first, installments: d.installments || [], note: d.note || '', payments: [], reminderSentFor: '', source: 'auto',
         createdAt: firebase.firestore.FieldValue.serverTimestamp(), updatedAt: firebase.firestore.FieldValue.serverTimestamp(), updatedBy: auth.currentUser?.email || ''});
       toast(`Đã tự lưu hợp đồng ${d.contractNo} · ${d.partner}`); show('contracts');
-    } else { openNew(); fillFrom(d); if (dup) $('pctHint').textContent = `Hợp đồng ${d.contractNo} của ${d.partner} đã có trong hệ thống, hãy kiểm tra trước khi lưu.`; }
-  } catch (e) { const c = String(e.code || ''), nf = /not-found|internal|unavailable|unauthenticated|functions\//.test(c) || /external|failed to fetch|internal|network/i.test(String(e.message || ''));
-    $('upMsg').textContent = nf ? 'Chưa kết nối được máy chủ đọc file (Firebase Functions chưa deploy, chưa bật gói Blaze, hoặc thiếu ANTHROPIC_API_KEY). Xem hướng dẫn trong README. Chi tiết: ' + (e.code || '') + ' ' + (e.message || e) : 'Không đọc được: ' + (e.message || e); }
+    } else { openNew(); fillFrom(d, ocrN); if (dup) $('pctHint').textContent = `Hợp đồng ${d.contractNo} của ${d.partner} đã có trong hệ thống, hãy kiểm tra trước khi lưu.`; }
+  } catch (e) { setMsg('Không đọc được: ' + (e.message || e)); }
+  if (ocrW) { ocrW.terminate().catch(() => {}); ocrW = null; }
   $('upBar').hidden = true; $('upGo').disabled = !upFiles.length;
 }
 
@@ -886,7 +1226,7 @@ function renderAuto() {
   const on = S.enabled !== false;
   el.innerHTML = `<div class="auto">
     <label class="sw"><input type="checkbox" ${on ? 'checked' : ''} onchange="setSetting('enabled',this.checked)">Tự gửi email nhắc hạn lúc 08:00 mỗi ngày</label>
-    <label class="sw"><input type="checkbox" ${S.autoSave !== false ? 'checked' : ''} onchange="setSetting('autoSave',this.checked)">Tự lưu hợp đồng sau khi đọc file</label>
+    <label class="sw"><input type="checkbox" ${S.autoSave === true ? 'checked' : ''} onchange="setSetting('autoSave',this.checked)">Tự lưu khi đọc đủ thông tin (không áp dụng cho file scan)</label>
     <label class="sw"><input type="checkbox" ${S.emailPartners ? 'checked' : ''} onchange="setSetting('emailPartners',this.checked)">Tự gửi email nhắc tới đối tác (cần có email đối tác)</label>
     <label>Email nhận nhắc<input type="email" value="${esc(S.reminderTo || '')}" placeholder="Mặc định theo cấu hình hệ thống" onchange="setSetting('reminderTo',this.value.trim())"></label>
     <label>Nhắc trước (ngày)<input type="number" min="1" max="60" value="${S.remindDays || 7}" onchange="setSetting('remindDays',Math.max(1,+this.value||7))"></label>
@@ -897,11 +1237,11 @@ function renderAuto() {
 }
 async function remindNow(b) { b.disabled = true; try { const {data} = await fns.httpsCallable('sendReminderNow')(); toast(data.sent ? `Đã gửi email nhắc ${data.sent} hợp đồng` : 'Không có hợp đồng nào cần nhắc'); } catch (e) { toast('Lỗi: ' + e.message); } b.disabled = false; }
 
-function fillFrom(d) { const f = dlgC.querySelector('form');
-  const set = (k, v, m) => { if (v == null || v === '') return; f[k].value = m ? num(v).toLocaleString('vi-VN') : v; f[k].classList.add('ai'); };
-  set('partner', d.partner); set('contractNo', d.contractNo); set('totalValue', d.totalValue, 1); set('depositAmount', d.depositAmount, 1); set('dueDate', d.dueDate); set('note', d.note);
+function fillFrom(d, ocrN) { const f = dlgC.querySelector('form');
+  const set = (k, v, m) => { if (v == null || v === '' || v === 0) return; f[k].value = m ? num(v).toLocaleString('vi-VN') : v; f[k].classList.add('ai'); };
+  set('partner', d.partner); set('contractNo', d.contractNo); set('totalValue', d.totalValue, 1); set('depositAmount', d.depositAmount, 1); set('dueDate', d.dueDate); set('note', d.note); set('partnerEmail', d.partnerEmail);
   setInst(d.installments || []);
-  $('pctHint').textContent = 'Đã tự điền từ file hợp đồng. Ô tô màu hồng là dữ liệu đọc được, hãy kiểm tra lại trước khi lưu.'; }
+  $('pctHint').textContent = 'Đã điền sẵn từ file' + (ocrN ? ' (đọc bằng OCR nên có thể sai chữ hoặc số)' : '') + '. Ô tô màu cam là dữ liệu đọc được, hãy kiểm tra lại trước khi lưu.' + ((d.missing || []).length ? ' Chưa tìm thấy: ' + d.missing.join(', ') + ', bạn điền tay giúp.' : ''); }
 
 /* ---------- Soạn email nhắc đối tác ---------- */
 function mailPartner(id) { const c = contracts.find(x => x.id === id); if (!c) return;
@@ -922,6 +1262,129 @@ function drawK() { $('kl').innerHTML = kItems.map((x, i) => `<div class="ki ${i 
 function runK(i) { const x = kItems[i]; if (!x) return; dlgK.close(); x.f(); }
 document.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k' && auth.currentUser) { e.preventDefault(); dlgK.open ? dlgK.close() : openK(); } });
 
+
+/* ---------- Nhắc hạn toàn màn hình khi đăng nhập ---------- */
+let gateDone = false, gateLast = null, gateWin = 7, gateDay = null, gateTimer = null;
+const baseTitle = document.title;
+try { const w = +localStorage.getItem('lg_gate_win'); if ([7, 14, 30].includes(w)) gateWin = w; } catch (e) {}
+function gateSkipped() { try { return localStorage.getItem('lg_gate_skip') === today(); } catch (e) { return false; } }
+function gateOpen() { return !$('dueGate').classList.contains('hidden'); }
+function snoozed() { try { const o = JSON.parse(localStorage.getItem('lg_gate_snooze') || '{}'); return o.d === today() ? (o.ids || []) : []; } catch (e) { return []; } }
+function setSnoozed(ids) { try { localStorage.setItem('lg_gate_snooze', JSON.stringify({d: today(), ids})); } catch (e) {} }
+function snoozeGate(id) {
+  setSnoozed([...new Set([...snoozed(), id])]); renderGate();
+  toast('Đã hoãn khoản này đến hết hôm nay', {label: 'Hoàn tác', fn: () => { setSnoozed(snoozed().filter(x => x !== id)); renderGate(); }});
+}
+function unsnoozeAll() { setSnoozed([]); renderGate(); }
+/* Toàn bộ khoản cần nhắc (chưa lọc ngày); hidden = số khoản đã hoãn */
+function gateItems() {
+  const t = today(), sn = snoozed();
+  const all = contracts.filter(c => remain(c) > 0 && due(c)).map(c => ({c, d: dayDiff(due(c), t)}))
+    .filter(x => x.d <= gateWin).sort((x, y) => x.d - y.d || num(y.c.depositAmount) - num(x.c.depositAmount));
+  const vis = all.filter(x => !sn.includes(x.c.id));
+  return {late: vis.filter(x => x.d < 0), soon: vis.filter(x => x.d >= 0), hidden: all.length - vis.length};
+}
+/* Phần đang hiển thị trong danh sách (đã áp bộ lọc ngày) */
+function gateView() {
+  const g = gateItems();
+  if (gateDay === 'late') return {late: g.late, soon: []};
+  if (typeof gateDay === 'number') return {late: [], soon: g.soon.filter(x => x.d === gateDay)};
+  return {late: g.late, soon: g.soon};
+}
+function updateBell() {
+  const n = contracts.filter(c => ['late', 'soon'].includes(st(c).k)).length, b = $('bellN');
+  if (b) b.textContent = n || '';
+  document.title = (n ? `(${n}) ` : '') + baseTitle;
+  if (loaded && gateOpen()) renderGate();
+}
+function setGateWin(n) { gateWin = n; gateDay = null; try { localStorage.setItem('lg_gate_win', n); } catch (e) {} renderGate(); }
+function pickDay(d) { gateDay = gateDay === d ? null : d; renderGate(); }
+function showGate(force) {
+  const g = $('dueGate'); if (!g || !loaded) return;
+  const {late, soon, hidden} = gateItems();
+  if (!force && !late.length && !soon.length) return;
+  if (force) { setSnoozed([]); $('gateSkip').checked = false; }
+  gateLast = document.activeElement; gateDay = null;
+  renderGate(); g.classList.add('anim'); g.classList.remove('hidden'); document.body.classList.add('gate-open'); $('gateClose').focus();
+  clearTimeout(gateTimer); gateTimer = setTimeout(() => g.classList.remove('anim'), 1600);
+}
+function renderStrip(late, soon) {
+  const days = {}; soon.forEach(x => { (days[x.d] ||= {n: 0, amt: 0}); days[x.d].n++; days[x.d].amt += dueNow(x.c); });
+  const lateAmt = sum(late, x => dueNow(x.c)), max = Math.max(lateAmt, ...Object.values(days).map(v => v.amt), 1), t0 = Date.parse(today());
+  const H = amt => amt > 0 ? Math.round(14 + 52 * amt / max) : 4, wd = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+  let h = '';
+  if (late.length) h += `<button class="gday lt has ${gateDay === 'late' ? 'sel' : ''}" onclick="pickDay('late')" title="${late.length} hợp đồng quá hạn · ${fmt(lateAmt)}"><span class="bar"><i style="--h:${H(lateAmt)}px"></i></span><span class="lb"><b>Trễ</b><small>${late.length} HĐ</small></span></button><span class="gday gap"></span>`;
+  for (let d = 0; d <= gateWin; d++) {
+    const dt = new Date(t0 + d * 864e5), v = days[d], dow = dt.getUTCDay();
+    h += `<button class="gday ${v ? 'has' : ''} ${v && d <= 3 ? 'hot' : ''} ${d === 0 ? 'td' : ''} ${dow === 0 || dow === 6 ? 'we' : ''} ${gateDay === d ? 'sel' : ''}" ${v ? `onclick="pickDay(${d})"` : 'disabled'} title="${fd(dt.toISOString().slice(0, 10))}${v ? ` · ${v.n} hợp đồng · ${fmt(v.amt)}` : ' · không có khoản nào'}"><span class="bar"><i style="--h:${H(v ? v.amt : 0)}px"></i></span><span class="lb"><b>${dt.getUTCDate()}</b><small>${wd[dow]}</small></span></button>`;
+  }
+  $('gateStrip').innerHTML = h;
+}
+function renderGate() {
+  const {late, soon, hidden} = gateItems(), view = gateView();
+  const need = sum(late, x => dueNow(x.c)) + sum(soon, x => dueNow(x.c));
+  $('gateWin').innerHTML = [7, 14, 30].map(n => `<button class="${n === gateWin ? 'on' : ''}" onclick="setGateWin(${n})">${n} ngày</button>`).join('');
+  const none = !late.length && !soon.length;
+  $('gateTitle').textContent = none ? `Không có khoản cọc nào đến hạn trong ${gateWin} ngày tới`
+    : soon.length ? `${soon.length} khoản đặt cọc đến hạn trong ${gateWin} ngày tới` + (late.length ? `, ${late.length} đã quá hạn` : '')
+    : `${late.length} khoản đặt cọc đã quá hạn`;
+  $('gateSub').textContent = new Date().toLocaleDateString('vi-VN', {weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Asia/Ho_Chi_Minh'}) + (none ? '' : ' · bấm vào một ngày trên lịch để lọc.');
+  $('gateStats').innerHTML =
+    `<div class="gs late"><small>Quá hạn</small><b>${late.length} HĐ</b></div>` +
+    `<div class="gs soon"><small>Đến hạn ≤ ${gateWin} ngày</small><b>${soon.length} HĐ</b></div>` +
+    `<div class="gs tot"><small>Tổng cần thu</small><b>${short(need)}</b></div>`;
+  renderStrip(late, soon);
+  let filt = '';
+  if (gateDay !== null) { const lbl = gateDay === 'late' ? 'Quá hạn' : fd(new Date(Date.parse(today()) + gateDay * 864e5).toISOString().slice(0, 10));
+    filt += `<span class="pill">Đang lọc: ${lbl}<button onclick="pickDay(gateDay)" aria-label="Bỏ lọc">✕</button></span>`; }
+  if (hidden) filt += `<span>${hidden} khoản đã hoãn đến hết hôm nay · <button onclick="unsnoozeAll()">Hiện lại</button></span>`;
+  $('gateFilt').innerHTML = filt;
+  let i = 0;
+  const card = ({c, d}) => {
+    const s = st(c), pct = Math.max(0, Math.min(100, Math.round(pc(paid(c), num(c.depositAmount))))), cls = d < 0 ? 'late' : d === 0 ? 'today' : d <= 3 ? '' : 'ok';
+    const cd = d < 0 ? `<b>${-d}</b><small>ngày trễ</small>` : d === 0 ? `<b>Hôm nay</b>` : `<b>${d}</b><small>ngày nữa</small>`;
+    return `<div class="gcard ${d < 0 ? 'late' : d === 0 ? 'today' : ''}" style="--i:${i++}"><div class="cd ${cls}">${cd}</div>` +
+      `<div class="nm"><b>${esc(c.partner)}</b><small>${esc(c.contractNo)}</small></div>` +
+      `<div class="dd"><small>Hạn ${fd(due(c))} · <span class="tag ${s.c}">${s.l}</span></small><div class="gbar" style="--w:${pct}%"><i></i></div><small class="pr">Đã cọc ${pct}% · ${short(paid(c))} / ${short(c.depositAmount)}</small></div>` +
+      `<div class="am"><small>Cần thu đợt này</small><b>${fmt(dueNow(c))}</b></div>` +
+      `<div class="acts"><button class="btn sm" onclick="gateGo('pay','${c.id}')">Thu tiền</button>` +
+      (c.partnerEmail ? `<button class="btn sm ghost" onclick="mailPartner('${c.id}')">Nhắc đối tác</button>` : '') +
+      `<button class="btn sm ghost" onclick="gateGo('detail','${c.id}')">Chi tiết</button>` +
+      `<button class="btn sm ghost" onclick="snoozeGate('${c.id}')" title="Ẩn khoản này đến hết hôm nay">Hoãn</button></div></div>`; };
+  const urgent = view.soon.filter(x => x.d <= 3), later = view.soon.filter(x => x.d > 3);
+  const sec = (t, a) => a.length ? `<div class="gsec">${t} (${a.length})</div>` + a.map(card).join('') : '';
+  $('gateList').innerHTML = none ? `<div class="gempty"><b>${hidden ? 'Đã xử lý hết khoản cần nhắc hôm nay' : 'Mọi thứ đang ổn 🎉'}</b>${hidden ? 'Bấm "Hiện lại" ở trên nếu muốn xem các khoản đã hoãn.' : 'Thử chọn khoảng 14 hoặc 30 ngày để xem các khoản sắp tới.'}</div>` :
+    sec('Quá hạn', view.late) + sec(gateDay === null ? 'Gấp · trong 3 ngày' : 'Đến hạn', urgent) + sec(`Sắp tới · 4–${gateWin} ngày`, later);
+  $('gateAll').onclick = () => closeGate(gateWin === 7 ? (soon.length ? 'soon' : 'late') : 'open');
+  $('gateCopy').disabled = none;
+}
+function copyGate(btn) {
+  const {late, soon} = gateView(), line = ({c, d}, n) => `${n}. ${c.partner} (${c.contractNo}) – hạn ${fd(due(c))} – ${d < 0 ? `quá ${-d} ngày` : d === 0 ? 'hôm nay' : `còn ${d} ngày`} – cần thu ${fmt(dueNow(c))}`;
+  let n = 0, t = `NHẮC HẠN ĐẶT CỌC – ${fd(today())}\n`;
+  if (late.length) t += `\nQuá hạn:\n` + late.map(x => line(x, ++n)).join('\n') + '\n';
+  if (soon.length) t += `\nĐến hạn trong ${gateWin} ngày tới:\n` + soon.map(x => line(x, ++n)).join('\n') + '\n';
+  t += `\nTổng cần thu: ${fmt(sum(late, x => dueNow(x.c)) + sum(soon, x => dueNow(x.c)))}`;
+  const ok = () => { const o = btn.textContent; btn.textContent = 'Đã sao chép ✓'; setTimeout(() => btn.textContent = o, 1800); };
+  (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(ok).catch(() => {
+    const ta = document.createElement('textarea'); ta.value = t; document.body.append(ta); ta.select();
+    try { document.execCommand('copy'); ok(); } catch (e) { toast('Không sao chép được'); } ta.remove(); });
+}
+function closeGate(chipKey) {
+  const g = $('dueGate'); if (!g || g.classList.contains('hidden')) return;
+  try { if ($('gateSkip').checked) localStorage.setItem('lg_gate_skip', today()); } catch (e) {}
+  g.classList.add('hidden'); g.classList.remove('anim'); document.body.classList.remove('gate-open');
+  if (chipKey) { chip = chipKey; show('contracts'); } else if (gateLast?.focus) gateLast.focus();
+}
+function gateGo(kind, id) { closeGate(); kind === 'pay' ? openPay(id) : openDetail(id); }
+document.addEventListener('keydown', e => {
+  if (!gateOpen()) return;
+  if (e.key === 'Escape') { e.preventDefault(); closeGate(); }
+  if (e.key === 'Tab') { const f = [...$('dueGate').querySelectorAll('button:not([disabled]),input')]; if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); } }
+});
+
 /* ---------- Đăng nhập ---------- */
 function login() {
   const b = $('loginBtn'), e = $('loginErr'); e.textContent = '';
@@ -940,18 +1403,19 @@ auth.onAuthStateChanged(user => {
   $('login').classList.toggle('hidden', !!user);
   $('app').classList.toggle('hidden', !user);
   $('nav').classList.toggle('hidden', !user);
-  $('logoutBtn').classList.toggle('hidden', !user); $('kBtn').classList.toggle('hidden', !user);
+  $('logoutBtn').classList.toggle('hidden', !user); $('kBtn').classList.toggle('hidden', !user); $('bellBtn').classList.toggle('hidden', !user);
   $('who').textContent = user ? user.email : '';
   if (user) {
     unsub?.();
     unsub = db.collection('contracts').onSnapshot(snap => {
       contracts = snap.docs.map(d => ({id: d.id, ...d.data()})); loaded = true;
       renderAll();
+      if (!gateDone) { gateDone = true; if (!gateSkipped()) showGate(); }
     });
     unsubS?.(); unsubS = db.doc('settings/automation').onSnapshot(d => { S = d.data() || {}; renderAuto(); });
     let v0 = 'overview'; try { v0 = localStorage.getItem('lg_view') || v0; } catch (e) {}
     show($('v-' + v0) ? v0 : 'overview');
-  } else { unsub?.(); unsubS?.(); unsub = unsubS = null; contracts = []; loaded = false; }
+  } else { unsub?.(); unsubS?.(); unsub = unsubS = null; contracts = []; loaded = false; gateDone = false; closeGate(); }
 });
 
 /* ---------- Tự làm mới & phím tắt ---------- */
