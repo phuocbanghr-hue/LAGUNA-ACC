@@ -439,6 +439,7 @@ body.gate-open{overflow:hidden}
     <button data-v="calendar" onclick="show('calendar')">Lịch hạn cọc</button>
     <button data-v="partners" onclick="show('partners')">Đối tác</button>
     <button data-v="ledger" onclick="show('ledger')">Sổ thu tiền</button>
+    <button data-v="report" onclick="show('report')">Báo cáo</button>
   </nav>
 </header>
 
@@ -531,6 +532,23 @@ body.gate-open{overflow:hidden}
     </div>
     <div class="calgrid" id="calGrid"></div>
     <div class="calday" id="calDay"></div>
+  </div>
+
+  <!-- BÁO CÁO KẾ TOÁN -->
+  <div id="v-report" class="view hidden">
+    <div class="toolbar">
+      <select id="rptType" onchange="renderReport()">
+        <option value="aging">Tuổi nợ cọc quá hạn</option>
+        <option value="monthly">Tổng hợp thu theo tháng</option>
+        <option value="statement">Đối chiếu công nợ theo đối tác</option>
+      </select>
+      <select id="rptPartner" onchange="renderReport()" class="hidden"></select>
+      <span class="grow"></span>
+      <button class="btn ghost" onclick="rptCSV()">Xuất Excel</button>
+      <button class="btn" onclick="rptPrint()">In / Lưu PDF</button>
+    </div>
+    <div class="hint" id="rptNote"></div>
+    <div class="tw"><table id="rptTable"></table></div>
   </div>
 
   <!-- SỔ THU -->
@@ -949,7 +967,7 @@ function openDetail(id) {
   $('dProg').firstElementChild.style.width = Math.min(pc(pd, c.depositAmount), 100) + '%';
   const rows = [...(num(c.depositPaid) ? [{date: '', amount: c.depositPaid, method: 'Số dư đầu', ref: '', id: null}] : []), ...(c.payments || [])];
   $('dPay').innerHTML = rows.map(p => `<tr><td>${fd(p.date)}</td><td class="r">${fmt(p.amount)}</td><td>${esc(p.method)}</td><td>${esc(p.ref)}</td>
-    <td class="acts">${p.id ? `<button class="btn sm danger" onclick="delPayment('${id}','${p.id}')">Xóa</button>` : ''}</td></tr>`).join('')
+    <td class="acts">${p.id ? `<button class="btn sm ghost" onclick="printReceipt('${id}','${p.id}')">In phiếu thu</button> <button class="btn sm danger" onclick="delPayment('${id}','${p.id}')">Xóa</button>` : ''}</td></tr>`).join('')
     || '<tr><td colspan="5" class="empty">Chưa có khoản thu</td></tr>';
   $('dInst').innerHTML = instTL(c);
   $('dNote').innerHTML = `<span class="tag ${s.c}">${s.l}</span> &nbsp; ${c.note ? esc(c.note) : ''} ${c.updatedBy ? '· Cập nhật bởi ' + esc(c.updatedBy) : ''}`;
@@ -972,6 +990,7 @@ function renderAll() {
   if (view === 'partners') renderPartners();
   if (view === 'ledger') renderLedger();
   if (view === 'calendar') renderCalendar();
+  if (view === 'report') renderReport();
   updateBell();
 }
 
@@ -1376,6 +1395,85 @@ async function restoreJSON(inp) {
   } catch (e) { alert('Không khôi phục được: ' + (e.message || e)); }
 }
 
+
+/* ---------- Báo cáo kế toán ---------- */
+function vnWords(n) { n = Math.round(num(n)); if (n <= 0) return 'Không đồng';
+  const d = ['không', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín'];
+  const three = (x, full) => { const h = Math.floor(x / 100), t = Math.floor(x % 100 / 10), u = x % 10, r = [];
+    if (h || full) r.push(d[h] + ' trăm');
+    if (t > 1) { r.push(d[t] + ' mươi'); r.push(u === 1 ? 'mốt' : u === 5 ? 'lăm' : u ? d[u] : ''); }
+    else if (t === 1) { r.push('mười'); r.push(u === 5 ? 'lăm' : u ? d[u] : ''); }
+    else if (u) { if (h || full) r.push('lẻ'); r.push(d[u]); }
+    return r.filter(Boolean).join(' '); };
+  const g = []; let x = n; while (x > 0) { g.push(x % 1000); x = Math.floor(x / 1000); }
+  const unit = ['', 'nghìn', 'triệu', 'tỷ', 'nghìn tỷ', 'triệu tỷ'], out = [];
+  for (let i = g.length - 1; i >= 0; i--) { if (!g[i]) continue; out.push(three(g[i], i < g.length - 1) + (unit[i] ? ' ' + unit[i] : '')); }
+  const t = out.join(' '); return t.charAt(0).toUpperCase() + t.slice(1) + ' đồng'; }
+function printDoc(title, body) {
+  const w = window.open('', '_blank'); if (!w) { alert('Trình duyệt đang chặn cửa sổ in. Hãy cho phép cửa sổ bật lên (pop-up) cho trang này.'); return; }
+  w.document.write(`<!doctype html><html lang="vi"><head><meta charset="utf-8"><title>${esc(title)}</title><style>
+    body{font:14px/1.5 Arial,sans-serif;color:#111;margin:28px 36px}h1{font-size:20px;text-align:center;margin:8px 0 2px;text-transform:uppercase}
+    .c{text-align:center;color:#444;margin:0 0 14px}.org{font-weight:700;color:#0b6f6a}table{border-collapse:collapse;width:100%;margin:10px 0}
+    th,td{border:1px solid #999;padding:6px 8px;text-align:left}th{background:#eef6f5}.r{text-align:right}.sig{display:flex;justify-content:space-around;margin-top:40px;text-align:center}
+    .sig div{width:40%}.sig small{color:#666}tfoot td{font-weight:700;background:#f6f6f6}@media print{body{margin:12mm}}</style></head><body>${body}<script>onload=()=>setTimeout(()=>print(),300)<\/script></body></html>`);
+  w.document.close(); }
+const ORG = 'Laguna Lăng Cô Sustainability';
+function printReceipt(cid, pid) {
+  const c = contracts.find(x => x.id === cid), p = c && (c.payments || []).find(x => x.id === pid); if (!p) return;
+  const no = 'PT-' + String(p.date || '').replace(/-/g, '') + '-' + String(pid).slice(-4).toUpperCase(), dt = (p.date || '').split('-');
+  printDoc('Phiếu thu ' + no, `<div class="org">${ORG}</div><h1>Phiếu thu</h1><p class="c">Số: ${esc(no)} · Ngày ${dt[2] || '..'} tháng ${dt[1] || '..'} năm ${dt[0] || '....'}</p>
+    <p>Họ tên người nộp tiền: <b>${esc(c.partner)}</b></p>
+    <p>Lý do nộp: Thanh toán tiền đặt cọc theo hợp đồng số <b>${esc(c.contractNo)}</b></p>
+    <p>Số tiền: <b>${fmt(p.amount)}</b><br>Viết bằng chữ: <i>${esc(vnWords(p.amount))}</i></p>
+    <p>Hình thức: ${esc(p.method || '')} ${p.ref ? '· Số chứng từ: ' + esc(p.ref) : ''} ${p.note ? '<br>Ghi chú: ' + esc(p.note) : ''}</p>
+    <p>Còn thiếu sau lần thu này (tính đến hiện tại): <b>${fmt(remain(c))}</b></p>
+    <div class="sig"><div><b>Người nộp tiền</b><br><small>(Ký, ghi rõ họ tên)</small></div><div><b>Người lập phiếu</b><br><small>(Ký, ghi rõ họ tên)</small></div></div>`); }
+
+let rptData = {title: '', head: [], rows: [], foot: null, note: ''};
+function renderReport() {
+  const type = $('rptType').value, ps = $('rptPartner'), t = today();
+  const names = [...new Set(contracts.map(c => c.partner))].sort((a, b) => a.localeCompare(b, 'vi'));
+  if (ps.options.length !== names.length + 0 || ![...ps.options].every((o, i) => o.value === names[i])) { const cur = ps.value; ps.innerHTML = names.map(n => `<option>${esc(n)}</option>`).join(''); if (names.includes(cur)) ps.value = cur; }
+  ps.classList.toggle('hidden', type !== 'statement');
+  let head = [], rows = [], foot = null, note = '', title = '';
+  if (type === 'aging') {
+    title = 'Tuổi nợ cọc quá hạn'; note = 'Tính trên số tiền cọc còn phải thu của từng đợt, theo số ngày quá hạn đến hôm nay (' + fd(t) + ').';
+    head = ['Đối tác', 'Số HĐ', 'Chưa đến hạn', '1–30 ngày', '31–60 ngày', '61–90 ngày', 'Trên 90 ngày', 'Tổng còn thiếu'];
+    const by = {}; dueEvents().forEach(e => { const o = by[e.id] = by[e.id] || {p: e.partner, n: e.no, b: [0, 0, 0, 0, 0]}, x = -dayDiff(e.date, t);
+      o.b[x <= 0 ? 0 : x <= 30 ? 1 : x <= 60 ? 2 : x <= 90 ? 3 : 4] += e.amount; });
+    const list = Object.values(by).sort((a, b) => sum(b.b.slice(1), v => v) - sum(a.b.slice(1), v => v));
+    rows = list.map(o => [o.p, o.n, ...o.b, sum(o.b, v => v)]);
+    foot = ['Tổng cộng', '', ...[0, 1, 2, 3, 4, 5].map(i => sum(rows, r => r[2 + i]))];
+  } else if (type === 'monthly') {
+    title = 'Tổng hợp thu tiền cọc theo tháng'; const pays = contracts.flatMap(c => (c.payments || []).map(p => ({...p, partner: c.partner})));
+    const methods = [...new Set(pays.map(p => p.method || 'Khác'))]; head = ['Tháng', 'Số khoản thu', ...methods, 'Tổng thu'];
+    const by = {}; pays.forEach(p => { const m = (p.date || '').slice(0, 7) || '—'; (by[m] = by[m] || []).push(p); });
+    rows = Object.keys(by).sort().reverse().map(m => [m === '—' ? m : m.split('-').reverse().join('/'), by[m].length, ...methods.map(k => sum(by[m].filter(p => (p.method || 'Khác') === k), p => p.amount)), sum(by[m], p => p.amount)]);
+    foot = ['Tổng cộng', sum(rows, r => r[1]), ...methods.map((_, i) => sum(rows, r => r[2 + i])), sum(rows, r => r[2 + methods.length])];
+    note = 'Chưa tính số dư đầu kỳ nhập khi tạo hợp đồng.';
+  } else {
+    const name = ps.value; title = 'Đối chiếu công nợ cọc - ' + name; note = 'Đến ngày ' + fd(t) + '. Dùng để gửi đối tác xác nhận.';
+    head = ['Số HĐ', 'Cọc phải đóng', 'Đã thu', 'Còn thiếu', 'Hạn cọc tiếp theo', 'Trạng thái'];
+    const cs = contracts.filter(c => c.partner === name); rows = cs.map(c => [c.contractNo, num(c.depositAmount), paid(c), remain(c), remain(c) ? fd(due(c)) : '—', st(c).l]);
+    foot = ['Tổng cộng', sum(rows, r => r[1]), sum(rows, r => r[2]), sum(rows, r => r[3]), '', ''];
+    rptData.pays = cs.flatMap(c => (c.payments || []).map(p => ({...p, no: c.contractNo}))).sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+  }
+  rptData = {...rptData, type, title, head, rows, foot, note, partner: ps.value};
+  const money = (v, j) => typeof v === 'number' && (type !== 'monthly' || j !== 1) ? fmt(v) : esc(v), rcls = (v, j) => typeof v === 'number' ? ' class="r"' : '';
+  $('rptNote').textContent = note;
+  $('rptTable').innerHTML = `<thead><tr>${head.map((h, j) => `<th${rows[0] && typeof rows[0][j] === 'number' ? ' class="r"' : ''}>${esc(h)}</th>`).join('')}</tr></thead><tbody>` +
+    (rows.map(r => `<tr>${r.map((v, j) => `<td${rcls(v, j)}>${money(v, j)}</td>`).join('')}</tr>`).join('') || `<tr><td colspan="${head.length}" class="empty">Không có dữ liệu</td></tr>`) + '</tbody>' +
+    (foot && rows.length ? `<tfoot><tr>${foot.map((v, j) => `<td${rcls(v, j)}><b>${money(v, j)}</b></td>`).join('')}</tr></tfoot>` : ''); }
+function rptCSV() { const r = rptData; if (!r.rows.length) return toast('Chưa có dữ liệu để xuất');
+  download(`bao-cao-${r.type}-${today()}.csv`, [r.head, ...r.rows, ...(r.foot ? [r.foot] : [])].map(x => x.map(v => `"${String(v).replace(/"/g, '""')}"`).join(';')).join('\n')); toast('Đã xuất file Excel (CSV)'); }
+function rptPrint() { const r = rptData; if (!r.rows.length) return toast('Chưa có dữ liệu để in');
+  const cell = (v, j) => `<td${typeof v === 'number' ? ' class="r"' : ''}>${typeof v === 'number' && !(r.type === 'monthly' && j === 1) ? fmt(v) : esc(v)}</td>`;
+  let body = `<div class="org">${ORG}</div><h1>${esc(r.title)}</h1><p class="c">${esc(r.note)}</p><table><thead><tr>${r.head.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${r.rows.map(x => `<tr>${x.map(cell).join('')}</tr>`).join('')}</tbody>${r.foot ? `<tfoot><tr>${r.foot.map(cell).join('')}</tr></tfoot>` : ''}</table>`;
+  if (r.type === 'statement') { body += `<p><b>Các khoản đã thu</b></p><table><thead><tr><th>Ngày</th><th>Số HĐ</th><th>Số tiền</th><th>Hình thức</th><th>Chứng từ</th></tr></thead><tbody>` +
+      ((r.pays || []).map(p => `<tr><td>${fd(p.date)}</td><td>${esc(p.no)}</td><td class="r">${fmt(p.amount)}</td><td>${esc(p.method)}</td><td>${esc(p.ref)}</td></tr>`).join('') || '<tr><td colspan="5">Chưa có khoản thu</td></tr>') + `</tbody></table>
+      <div class="sig"><div><b>Đại diện ${ORG}</b><br><small>(Ký, ghi rõ họ tên)</small></div><div><b>Đại diện ${esc(r.partner)}</b><br><small>(Xác nhận số liệu, ký tên)</small></div></div>`; }
+  printDoc(r.title, body); }
+
 /* ---------- Soạn email nhắc đối tác ---------- */
 function mailPartner(id) { const c = contracts.find(x => x.id === id); if (!c) return;
   if (!c.partnerEmail) return toast('Chưa có email đối tác, hãy bấm Sửa hợp đồng để nhập');
@@ -1387,7 +1485,7 @@ function mailPartner(id) { const c = contracts.find(x => x.id === id); if (!c) r
 const dlgK = $('dlgK'); let kSel = 0, kItems = [];
 function openK() { $('kq').value = ''; renderK(); dlgK.showModal(); $('kq').focus(); }
 function renderK() { const q = norm($('kq').value);
-  const acts = [['Tổng quan', () => show('overview')], ['Danh sách hợp đồng', () => show('contracts')], ['Đối tác', () => show('partners')], ['Sổ thu tiền', () => show('ledger')], ['Lịch hạn cọc', () => show('calendar')], ['Sao lưu dữ liệu', backupJSON],
+  const acts = [['Tổng quan', () => show('overview')], ['Danh sách hợp đồng', () => show('contracts')], ['Đối tác', () => show('partners')], ['Sổ thu tiền', () => show('ledger')], ['Lịch hạn cọc', () => show('calendar')], ['Báo cáo kế toán', () => show('report')], ['Sao lưu dữ liệu', backupJSON],
     ['Thêm hợp đồng', openNew], ['Ghi nhận thu tiền', () => openPay()], ['Tải hợp đồng lên', () => openUpload('contract')], ['Đối soát sao kê', () => openUpload('bank')]].map(([l, f]) => ({l, s: 'Lệnh', f}));
   const cs = contracts.map(c => ({l: `${c.partner} · ${c.contractNo}`, s: remain(c) ? 'Còn thiếu ' + short(remain(c)) : 'Đã đủ cọc', f: () => openDetail(c.id)}));
   kItems = [...cs, ...acts].filter(x => !q || norm(x.l).includes(q)).slice(0, 9); kSel = 0; drawK(); }
