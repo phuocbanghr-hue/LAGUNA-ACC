@@ -745,6 +745,14 @@ function download(name, text) {
   a.download = name; a.click();
 }
 
+/* Xuất file Excel thật (.xlsx) để mở bằng Excel/WPS không bị dồn vào một cột; nếu không tải được thư viện thì dùng CSV có dòng sep=; */
+async function exportSheet(base, rows, sheet) {
+  try { await loadLib('xlsx'); const ws = XLSX.utils.aoa_to_sheet(rows);
+    ws['!cols'] = rows[0].map((_, j) => ({wch: Math.min(40, Math.max(10, ...rows.map(r => String(r[j] ?? '').length + 2)))}));
+    const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, (sheet || 'Dữ liệu').slice(0, 31)); XLSX.writeFile(wb, base + '.xlsx'); toast('Đã xuất file Excel (.xlsx)');
+  } catch (e) { download(base + '.csv', 'sep=;\n' + rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(';')).join('\n')); toast('Không tải được thư viện Excel, đã xuất CSV thay thế'); }
+}
+
 /* ---------- Điều hướng ---------- */
 function show(v) {
   view = v; try { localStorage.setItem('lg_view', v); } catch (e) {}
@@ -869,8 +877,7 @@ function exportCSV() {
   const rows = [['Đối tác', 'Số HĐ', 'Giá trị HĐ', 'Cọc phải đóng', 'Đã thu', 'Còn thiếu', '% đã cọc/HĐ', 'Hạn cọc', 'Trạng thái']];
   (window._list || []).forEach(c => rows.push([c.partner, c.contractNo, num(c.totalValue), num(c.depositAmount), paid(c), remain(c),
     pc(paid(c), c.totalValue).toFixed(1) + '%', fd(due(c)), st(c).l]));
-  download(`dat-coc-${today()}.csv`, rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(';')).join('\n'));
-  toast('Đã xuất file Excel (CSV)');
+  exportSheet(`dat-coc-${today()}`, rows, 'Hợp đồng');
 }
 
 /* ---------- Đối tác ---------- */
@@ -1465,7 +1472,7 @@ function renderReport() {
     (rows.map(r => `<tr>${r.map((v, j) => `<td${rcls(v, j)}>${money(v, j)}</td>`).join('')}</tr>`).join('') || `<tr><td colspan="${head.length}" class="empty">Không có dữ liệu</td></tr>`) + '</tbody>' +
     (foot && rows.length ? `<tfoot><tr>${foot.map((v, j) => `<td${rcls(v, j)}><b>${money(v, j)}</b></td>`).join('')}</tr></tfoot>` : ''); }
 function rptCSV() { const r = rptData; if (!r.rows.length) return toast('Chưa có dữ liệu để xuất');
-  download(`bao-cao-${r.type}-${today()}.csv`, [r.head, ...r.rows, ...(r.foot ? [r.foot] : [])].map(x => x.map(v => `"${String(v).replace(/"/g, '""')}"`).join(';')).join('\n')); toast('Đã xuất file Excel (CSV)'); }
+  exportSheet(`bao-cao-${r.type}-${today()}`, [r.head, ...r.rows, ...(r.foot ? [r.foot] : [])], 'Báo cáo'); }
 function rptPrint() { const r = rptData; if (!r.rows.length) return toast('Chưa có dữ liệu để in');
   const cell = (v, j) => `<td${typeof v === 'number' ? ' class="r"' : ''}>${typeof v === 'number' && !(r.type === 'monthly' && j === 1) ? fmt(v) : esc(v)}</td>`;
   let body = `<div class="org">${ORG}</div><h1>${esc(r.title)}</h1><p class="c">${esc(r.note)}</p><table><thead><tr>${r.head.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${r.rows.map(x => `<tr>${x.map(cell).join('')}</tr>`).join('')}</tbody>${r.foot ? `<tfoot><tr>${r.foot.map(cell).join('')}</tr></tfoot>` : ''}</table>`;
