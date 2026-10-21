@@ -21,10 +21,10 @@
 3. Tạo 2 secret
    ```
    firebase functions:secrets:set GMAIL_APP_PASSWORD
-   firebase functions:secrets:set ANTHROPIC_API_KEY
+   firebase functions:secrets:set GEMINI_API_KEY
    ```
    - `GMAIL_APP_PASSWORD`: mật khẩu ứng dụng 16 ký tự của Gmail (Tài khoản Google > Bảo mật > Xác minh 2 bước > Mật khẩu ứng dụng).
-   - `ANTHROPIC_API_KEY`: lấy tại https://console.anthropic.com
+   - `GEMINI_API_KEY`: lấy tại https://aistudio.google.com/apikey
 
 4. Cài thư viện cho functions
    ```

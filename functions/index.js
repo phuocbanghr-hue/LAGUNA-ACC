@@ -10,8 +10,8 @@ const db = admin.firestore();
 const GMAIL_USER = defineString("GMAIL_USER");
 const GMAIL_APP_PASSWORD = defineSecret("GMAIL_APP_PASSWORD");
 const REMINDER_TO = defineString("REMINDER_TO", {default: "LP-Accountant@lagunalangco.com"});
-const ANTHROPIC_API_KEY = defineSecret("ANTHROPIC_API_KEY");
-const CLAUDE_MODEL = defineString("CLAUDE_MODEL", {default: "claude-sonnet-5-5"});
+const GEMINI_API_KEY = defineSecret("GEMINI_API_KEY");
+const GEMINI_MODEL = defineString("GEMINI_MODEL", {default: "gemini-2.5-flash"});
 
 const TZ = "Asia/Ho_Chi_Minh";
 const REGION = "asia-southeast1";
@@ -125,24 +125,23 @@ exports.sendReminderNow = onCall(
     },
 );
 
-// ---- Gọi Claude đọc file ----
+// ---- Gọi Gemini đọc file ----
 async function askClaude(files, prompt) {
   if (!Array.isArray(files) || !files.length || files.length > 12) throw new HttpsError("invalid-argument", "Cần 1–12 file.");
-  const content = files.map(f => f.mediaType === "application/pdf" ?
-    {type: "document", source: {type: "base64", media_type: "application/pdf", data: f.data}} :
-    {type: "image", source: {type: "base64", media_type: "image/jpeg", data: f.data}});
-  content.push({type: "text", text: prompt});
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
+  const parts = files.map(f => ({inline_data: {mime_type: f.mediaType === "application/pdf" ? "application/pdf" : "image/jpeg", data: f.data}}));
+  parts.push({text: prompt});
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL.value()}:generateContent`;
+  const res = await fetch(url, {
     method: "POST",
-    headers: {"content-type": "application/json", "x-api-key": ANTHROPIC_API_KEY.value(), "anthropic-version": "2023-06-01"},
-    body: JSON.stringify({model: CLAUDE_MODEL.value(), max_tokens: 4000, messages: [{role: "user", content}]}),
+    headers: {"content-type": "application/json", "x-goog-api-key": GEMINI_API_KEY.value()},
+    body: JSON.stringify({contents: [{role: "user", parts}], generationConfig: {temperature: 0, responseMimeType: "application/json"}}),
   });
   if (!res.ok) {
-    console.error("Anthropic API", res.status, await res.text());
+    console.error("Gemini API", res.status, await res.text());
     throw new HttpsError("internal", "Không gọi được dịch vụ đọc file (" + res.status + ").");
   }
   const out = await res.json();
-  const text = (out.content || []).map(b => b.text || "").join("");
+  const text = ((out.candidates || [])[0]?.content?.parts || []).map(b => b.text || "").join("");
   const m = text.match(/\{[\s\S]*\}/);
   if (!m) throw new HttpsError("internal", "Không đọc được dữ liệu từ file.");
   try { return JSON.parse(m[0]); } catch (e) { throw new HttpsError("internal", "Kết quả đọc không hợp lệ, thử lại."); }
@@ -162,7 +161,7 @@ const BANK_PROMPT = `Đây là sao kê ngân hàng / giấy báo có. Trích xu�
 Quy tắc: bỏ qua giao dịch tiền ra; không đoán những gì không đọc rõ; số tiền là số nguyên không có dấu phân cách.`;
 
 exports.extractContract = onCall(
-    {region: REGION, secrets: [ANTHROPIC_API_KEY], timeoutSeconds: 120, memory: "512MiB"},
+    {region: REGION, secrets: [GEMINI_API_KEY], timeoutSeconds: 120, memory: "512MiB"},
     async (req) => {
       if (!req.auth) throw new HttpsError("unauthenticated", "Vui lòng đăng nhập.");
       return askClaude(req.data && req.data.files, CONTRACT_PROMPT);
@@ -171,7 +170,7 @@ exports.extractContract = onCall(
 
 // Đối soát sao kê: trả về danh sách giao dịch tiền vào để web tự khớp với hợp đồng
 exports.extractPayments = onCall(
-    {region: REGION, secrets: [ANTHROPIC_API_KEY], timeoutSeconds: 120, memory: "512MiB"},
+    {region: REGION, secrets: [GEMINI_API_KEY], timeoutSeconds: 120, memory: "512MiB"},
     async (req) => {
       if (!req.auth) throw new HttpsError("unauthenticated", "Vui lòng đăng nhập.");
       return askClaude(req.data && req.data.files, BANK_PROMPT);
