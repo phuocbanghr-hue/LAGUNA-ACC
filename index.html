@@ -1152,24 +1152,68 @@ function bankFromText(text) { const out = [];
     if (dt && pm) out.push({date: dt.iso, amount: Number(pm[1].replace(/[.,]/g, '')), description: ln.replace(/\s+/g, ' ').trim(), ref: ''}); });
   return out; }
 
+/* --- Đọc bằng AI (Gemini). Key chỉ lưu trong trình duyệt này, không nằm trong code/GitHub --- */
+const GEM_MODEL = 'gemini-2.5-flash';
+const GEM_CONTRACT = `Đây là nội dung một hợp đồng/thỏa thuận mà Laguna (Việt Nam) là Bên A. Trích xuất thông tin và CHỈ trả về một đối tượng JSON, không kèm giải thích hay markdown:
+{"partner": tên công ty của Bên B (đối tác, không phải Laguna), "contractNo": số hợp đồng ("Số/No."), "totalValue": tổng giá trị hợp đồng bằng VND (số nguyên) hoặc null,
+ "depositAmount": tổng tiền đặt cọc bằng VND (số nguyên) hoặc null, "partnerEmail": email của Bên B hoặc "",
+ "installments": [{"dueDate": "YYYY-MM-DD", "amount": số nguyên VND}] các đợt thanh toán cọc theo thứ tự, mảng rỗng nếu không có,
+ "note": tóm tắt 1 câu điều khoản quan trọng hoặc ""}
+Quy tắc: chỉ ghi những gì đọc được rõ ràng, nếu không chắc thì để null; ngày theo định dạng YYYY-MM-DD; số tiền là số nguyên không có dấu phân cách.`;
+const GEM_BANK = `Đây là sao kê ngân hàng / giấy báo có. Trích xuất CHỈ các giao dịch TIỀN VÀO (ghi có) và trả về duy nhất một đối tượng JSON, không kèm giải thích hay markdown:
+{"transactions": [{"date": "YYYY-MM-DD", "amount": số nguyên VND, "description": nội dung chuyển khoản nguyên văn, "ref": mã giao dịch/số chứng từ hoặc ""}]}
+Quy tắc: bỏ qua giao dịch tiền ra; không đoán những gì không đọc rõ; số tiền là số nguyên không có dấu phân cách.`;
+const gKey = () => { try { return localStorage.getItem('geminiKey') || ''; } catch (e) { return ''; } };
+function askGKey() { const k = (prompt('Dán Gemini API key để AI đọc file (chỉ lưu trong trình duyệt này).\nBấm Hủy để dùng cách đọc thường:') || '').trim();
+  if (k) { try { localStorage.setItem('geminiKey', k); } catch (e) {} } return k; }
+const fileB64 = f => new Promise((ok, no) => { const r = new FileReader(); r.onload = () => ok(r.result.split(',')[1]); r.onerror = () => no(new Error('Không đọc được file ' + f.name)); r.readAsDataURL(f); });
+async function gemini(files, prompt, key) {
+  const parts = []; let size = 0;
+  for (const f of files) { const k = kindOf(f);
+    if (k === 'docx') parts.push({text: 'Nội dung file Word "' + f.name + '":\n' + (await docxText(f)).text});
+    else if (k === 'pdf' || k === 'img') { const mime = k === 'pdf' ? 'application/pdf' : (f.type || 'image/jpeg'); const data = await fileB64(f); size += data.length; parts.push({inline_data: {mime_type: mime, data}}); }
+    else throw new Error('AI chưa đọc được file "' + f.name + '".'); }
+  if (size > 18e6) throw new Error('File quá nặng (tối đa khoảng 13MB), hãy chọn ít trang hơn.');
+  parts.push({text: prompt});
+  setMsg('AI đang đọc file, vui lòng chờ 10–40 giây...');
+  const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + GEM_MODEL + ':generateContent', {method: 'POST', headers: {'content-type': 'application/json', 'x-goog-api-key': key},
+    body: JSON.stringify({contents: [{role: 'user', parts}], generationConfig: {temperature: 0, responseMimeType: 'application/json'}})});
+  if (!res.ok) { const t = await res.text(); if (res.status === 400 || res.status === 401 || res.status === 403) { try { localStorage.removeItem('geminiKey'); } catch (e) {} throw new Error('Key Gemini không hợp lệ hoặc bị từ chối (' + res.status + '). Hãy bấm đọc lại và nhập key mới.'); }
+    if (res.status === 429) throw new Error('Gemini báo quá giới hạn sử dụng (429), đợi một lát rồi thử lại.'); throw new Error('Gemini lỗi ' + res.status + ': ' + t.slice(0, 150)); }
+  const out = await res.json(), text = ((out.candidates || [])[0]?.content?.parts || []).map(p => p.text || '').join(''), m = text.match(/\{[\s\S]*\}/);
+  if (!m) throw new Error('AI không trả về dữ liệu đọc được, thử lại.');
+  try { return JSON.parse(m[0]); } catch (e) { throw new Error('Kết quả đọc không hợp lệ, thử lại.'); } }
+async function aiContract(files, key) { const r = await gemini(files, GEM_CONTRACT, key);
+  const ins = (Array.isArray(r.installments) ? r.installments : []).map(i => ({dueDate: String(i.dueDate || ''), amount: Math.round(num(i.amount))})).filter(i => /^\d{4}-\d{2}-\d{2}$/.test(i.dueDate) && i.amount > 0).sort((a, b) => a.dueDate.localeCompare(b.dueDate));
+  const d = {partner: String(r.partner || '').trim(), contractNo: String(r.contractNo || '').trim(), totalValue: Math.round(num(r.totalValue)), depositAmount: Math.round(num(r.depositAmount)), partnerEmail: String(r.partnerEmail || '').trim(), installments: ins, note: String(r.note || '').trim(), dueDate: ''};
+  if (ins.length) { d.depositAmount = sum(ins, x => x.amount); d.dueDate = ins[0].dueDate; }
+  d.missing = [['partner', 'Đối tác'], ['contractNo', 'Số hợp đồng'], ['totalValue', 'Giá trị hợp đồng'], ['depositAmount', 'Tiền cọc'], ['dueDate', 'Hạn cọc']].filter(([k]) => !d[k]).map(x => x[1]); return d; }
+async function aiBank(files, key) { const r = await gemini(files, GEM_BANK, key);
+  return (Array.isArray(r.transactions) ? r.transactions : []).map(t => ({date: String(t.date || ''), amount: Math.round(num(t.amount)), description: String(t.description || ''), ref: String(t.ref || '')})).filter(t => /^\d{4}-\d{2}-\d{2}$/.test(t.date) && t.amount > 0); }
+
 /* --- Nút "Đọc và tự động xử lý" --- */
 async function runExtract() {
   $('upGo').disabled = true; $('upBar').hidden = false; setMsg('Đang đọc file...');
-  const bank = upMode === 'bank';
+  const bank = upMode === 'bank', gk = gKey() || askGKey();
   try {
     if (bank) {
       const txs = []; let sheetFail = false;
       for (const f of upFiles) {
         if (kindOf(f) === 'sheet') { let got = null; for (const rows of await sheetRows(f)) { got = bankFromRows(rows); if (got) break; } if (got) txs.push(...got); else sheetFail = true; }
+        else if (gk) txs.push(...await aiBank([f], gk));
         else txs.push(...bankFromText((await extractText(f)).text));
       }
       if (!txs.length) throw new Error(sheetFail ? 'Không tìm thấy cột Ngày / Số tiền ghi có trong file Excel. Hãy kiểm tra file đã tải đúng là sao kê chi tiết giao dịch.' : 'Không nhận ra giao dịch tiền vào nào. Với PDF/ảnh, hãy tải sao kê dạng Excel hoặc CSV từ internet banking để đọc chính xác.');
       dlgU.close(); return openMatches(txs);
     }
-    let text = '', ocrN = 0;
-    for (const f of upFiles) { if (kindOf(f) === 'sheet') throw new Error('File Excel/CSV dùng cho sao kê. Với hợp đồng, hãy chọn Word, PDF hoặc ảnh.'); const r = await extractText(f); text += '\n' + r.text; ocrN += r.ocr; }
-    if (text.replace(/\s/g, '').length < 40) throw new Error('Không đọc được chữ trong file. Nếu là ảnh mờ hoặc nghiêng, hãy chụp lại rõ hơn hoặc dùng nút "Nhập tay".');
-    const d = parseContract(text);
+    let ocrN = 0, d;
+    if (gk) { if (upFiles.some(f => kindOf(f) === 'sheet')) throw new Error('File Excel/CSV dùng cho sao kê. Với hợp đồng, hãy chọn Word, PDF hoặc ảnh.'); d = await aiContract(upFiles, gk); }
+    else {
+      let text = '';
+      for (const f of upFiles) { if (kindOf(f) === 'sheet') throw new Error('File Excel/CSV dùng cho sao kê. Với hợp đồng, hãy chọn Word, PDF hoặc ảnh.'); const r = await extractText(f); text += '\n' + r.text; ocrN += r.ocr; }
+      if (text.replace(/\s/g, '').length < 40) throw new Error('Không đọc được chữ trong file. Nếu là ảnh mờ hoặc nghiêng, hãy chụp lại rõ hơn hoặc dùng nút "Nhập tay".');
+      d = parseContract(text);
+    }
     dlgU.close();
     const dup = contracts.find(x => d.contractNo && x.contractNo === d.contractNo && x.partner === d.partner);
     const first = (d.installments || [])[0]?.dueDate || d.dueDate;
