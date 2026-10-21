@@ -400,6 +400,26 @@ body.gate-open{overflow:hidden}
 #dueGate .gfilt .pill button{text-decoration:none;background:var(--card);border-radius:50%;width:20px;height:20px;line-height:20px;text-align:center}
 @media(prefers-color-scheme:dark){#dueGate .gfilt button{color:var(--p-h)}}
 @media(max-width:760px){#dueGate .gstrip{height:104px}}
+
+/* ===== Lịch hạn cọc ===== */
+.calsum{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.calsum .cs{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:12px 16px;box-shadow:var(--shadow)}
+.calsum .cs small{display:block;color:var(--mut);font-size:12px}.calsum .cs b{font-size:clamp(16px,2.4vw,22px)}
+.calsum .cs.late b{color:var(--t-late)}.calsum .cs.soon b{color:var(--t-soon)}
+.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.calgrid .dh{text-align:center;font-size:12px;font-weight:600;color:var(--mut);padding:4px 0}
+.calgrid .dc{min-height:86px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:6px 7px;cursor:pointer;display:flex;flex-direction:column;gap:3px;overflow:hidden;transition:border-color .15s,transform .15s}
+.calgrid .dc:hover{border-color:var(--teal);transform:translateY(-1px)}
+.calgrid .dc.out{opacity:.45}.calgrid .dc.today{border-color:var(--teal);box-shadow:0 0 0 2px color-mix(in srgb,var(--teal) 25%,transparent)}
+.calgrid .dc.sel{border-color:var(--pk)}
+.calgrid .dn{font-size:12px;font-weight:600;color:var(--mut)}
+.calgrid .ev{font-size:11px;line-height:1.25;padding:2px 6px;border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.calgrid .ev.late{background:var(--t-late-bg);color:var(--t-late)}.calgrid .ev.soon{background:var(--t-soon-bg);color:var(--t-soon)}.calgrid .ev.wait{background:var(--t-wait-bg);color:var(--t-wait)}
+.calgrid .more{font-size:11px;color:var(--mut)}
+.calday{margin-top:14px}
+.calday .row{display:grid;grid-template-columns:1.4fr 1fr 1fr auto;gap:10px;align-items:center;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:10px 14px;margin-bottom:8px}
+@media(max-width:720px){.calsum{grid-template-columns:repeat(2,1fr)}.calgrid{gap:3px}.calgrid .dc{min-height:60px;padding:4px}.calgrid .ev{display:none}.calgrid .dot{display:block}.calday .row{grid-template-columns:1fr auto}}
+.calgrid .dot{display:none;width:8px;height:8px;border-radius:50%;background:var(--pk)}
 </style>
 </head>
 <body>
@@ -416,6 +436,7 @@ body.gate-open{overflow:hidden}
   <nav class="hidden" id="nav">
     <button class="on" data-v="overview" onclick="show('overview')">Tổng quan</button>
     <button data-v="contracts" onclick="show('contracts')">Hợp đồng<span class="nb hidden" id="nbLate"></span><span class="nb amb hidden" id="nbSoon"></span></button>
+    <button data-v="calendar" onclick="show('calendar')">Lịch hạn cọc</button>
     <button data-v="partners" onclick="show('partners')">Đối tác</button>
     <button data-v="ledger" onclick="show('ledger')">Sổ thu tiền</button>
   </nav>
@@ -475,6 +496,9 @@ body.gate-open{overflow:hidden}
         <option value="val">Giá trị HĐ lớn nhất</option>
       </select>
       <button class="btn ghost" onclick="exportCSV()">Xuất Excel</button>
+      <button class="btn ghost" onclick="backupJSON()" title="Tải toàn bộ dữ liệu về máy để lưu dự phòng">Sao lưu</button>
+      <button class="btn ghost" onclick="$('restoreFile').click()" title="Nạp lại dữ liệu từ file sao lưu">Khôi phục</button>
+      <input type="file" id="restoreFile" accept=".json,application/json" hidden onchange="restoreJSON(this)">
       <button class="btn ghost" onclick="window.print()">In trang</button>
       <button class="btn ghost" onclick="openNew()">Nhập tay</button>
       <button class="btn" onclick="openUpload()">Tải hợp đồng lên</button>
@@ -493,6 +517,20 @@ body.gate-open{overflow:hidden}
       <thead><tr><th>Đối tác</th><th class="r">Số HĐ</th><th class="r">Tổng giá trị HĐ</th><th class="r">Cọc phải thu</th><th class="r">Đã thu</th><th class="r">Còn thiếu</th><th>Tỷ lệ cọc / tổng HĐ</th></tr></thead>
       <tbody id="ptbody"></tbody>
     </table></div>
+  </div>
+
+  <!-- LỊCH HẠN CỌC -->
+  <div id="v-calendar" class="view hidden">
+    <div class="calsum" id="calSum"></div>
+    <div class="toolbar">
+      <button class="btn ghost sm" onclick="calMove(-1)">‹ Tháng trước</button>
+      <b id="calTitle" style="min-width:130px;text-align:center"></b>
+      <button class="btn ghost sm" onclick="calMove(1)">Tháng sau ›</button>
+      <button class="btn ghost sm" onclick="calMove(0)">Hôm nay</button>
+      <span class="grow"></span><small id="calMonthTotal" style="color:var(--mut)"></small>
+    </div>
+    <div class="calgrid" id="calGrid"></div>
+    <div class="calday" id="calDay"></div>
   </div>
 
   <!-- SỔ THU -->
@@ -933,6 +971,7 @@ function renderAll() {
   if (view === 'contracts') renderContracts();
   if (view === 'partners') renderPartners();
   if (view === 'ledger') renderLedger();
+  if (view === 'calendar') renderCalendar();
   updateBell();
 }
 
@@ -1287,6 +1326,56 @@ function fillFrom(d, ocrN) { const f = dlgC.querySelector('form');
   setInst(d.installments || []);
   $('pctHint').textContent = 'Đã điền sẵn từ file' + (ocrN ? ' (đọc bằng OCR nên có thể sai chữ hoặc số)' : '') + '. Ô tô màu cam là dữ liệu đọc được, hãy kiểm tra lại trước khi lưu.' + ((d.missing || []).length ? ' Chưa tìm thấy: ' + d.missing.join(', ') + ', bạn điền tay giúp.' : ''); }
 
+
+/* ---------- Lịch hạn cọc ---------- */
+let calY = new Date().getFullYear(), calM = new Date().getMonth(), calSel = '';
+function dueEvents() { const ev = [];
+  contracts.forEach(c => { if (remain(c) <= 0) return;
+    const a = [...(c.installments || [])].filter(i => i.dueDate).sort((x, y) => x.dueDate.localeCompare(y.dueDate));
+    if (!a.length) { if (c.dueDate) ev.push({date: c.dueDate, id: c.id, partner: c.partner, no: c.contractNo, amount: remain(c), n: 0}); return; }
+    let pool = paid(c); a.forEach((i, k) => { const u = Math.min(pool, num(i.amount)); pool -= u; const left = num(i.amount) - u; if (left > 0) ev.push({date: i.dueDate, id: c.id, partner: c.partner, no: c.contractNo, amount: left, n: a.length > 1 ? k + 1 : 0}); }); });
+  return ev; }
+const evCls = d => { const x = dayDiff(d, today()); return x < 0 ? 'late' : x <= 7 ? 'soon' : 'wait'; };
+function calMove(d) { if (!d) { calY = new Date().getFullYear(); calM = new Date().getMonth(); calSel = today(); } else { calM += d; if (calM < 0) { calM = 11; calY--; } if (calM > 11) { calM = 0; calY++; } } renderCalendar(); }
+function calPick(d) { calSel = d; renderCalendar(); }
+function renderCalendar() {
+  const ev = dueEvents(), t = today(), by = {}; ev.forEach(e => (by[e.date] = by[e.date] || []).push(e));
+  const within = n => sum(ev.filter(e => { const x = dayDiff(e.date, t); return x >= 0 && x <= n; }), e => e.amount);
+  $('calSum').innerHTML = [['late', 'Quá hạn chưa thu', sum(ev.filter(e => e.date < t), e => e.amount)], ['soon', 'Đến hạn 7 ngày tới', within(7)], ['', 'Đến hạn 30 ngày tới', within(30)], ['', 'Đến hạn 60 ngày tới', within(60)]]
+    .map(([c, l, v]) => `<div class="cs ${c}"><small>${l}</small><b>${short(v)}</b></div>`).join('');
+  $('calTitle').textContent = `Tháng ${calM + 1}/${calY}`;
+  const first = new Date(calY, calM, 1), lead = (first.getDay() + 6) % 7, start = new Date(calY, calM, 1 - lead), cells = [];
+  let monthTotal = 0;
+  for (let i = 0; i < 42; i++) { const d = new Date(start); d.setDate(start.getDate() + i); const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`, l = by[iso] || [], out = d.getMonth() !== calM;
+    if (!out) monthTotal += sum(l, e => e.amount);
+    cells.push(`<div class="dc ${out ? 'out' : ''} ${iso === t ? 'today' : ''} ${iso === calSel ? 'sel' : ''}" onclick="calPick('${iso}')"><span class="dn">${d.getDate()}</span>` +
+      l.slice(0, 2).map(e => `<span class="ev ${evCls(e.date)}" title="${esc(e.partner)} · ${fmt(e.amount)}">${esc(e.partner)}</span>`).join('') + (l.length > 2 ? `<span class="more">+${l.length - 2} nữa</span>` : '') + (l.length ? '<span class="dot"></span>' : '') + '</div>'); }
+  $('calGrid').innerHTML = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'].map(x => `<div class="dh">${x}</div>`).join('') + cells.join('');
+  $('calMonthTotal').textContent = monthTotal ? `Cần thu trong tháng: ${fmt(monthTotal)}` : '';
+  const sel = calSel ? (by[calSel] || []) : [];
+  $('calDay').innerHTML = !calSel ? '<div class="hint">Bấm vào một ngày để xem các khoản cọc đến hạn.</div>' :
+    `<h3 style="margin:0 0 10px;font-size:15px">Ngày ${fd(calSel)} · ${sel.length ? `${sel.length} khoản · ${fmt(sum(sel, e => e.amount))}` : 'không có khoản đến hạn'}</h3>` +
+    sel.map(e => `<div class="row"><div><b>${esc(e.partner)}</b> <small>· ${esc(e.no)}${e.n ? ` · đợt ${e.n}` : ''}</small></div><div><span class="tag ${evCls(e.date)}">${(() => { const x = dayDiff(e.date, t); return x < 0 ? `Quá hạn ${-x} ngày` : x === 0 ? 'Hôm nay' : `Còn ${x} ngày`; })()}</span></div><div class="r"><b>${fmt(e.amount)}</b></div>
+      <div class="acts"><button class="btn sm" onclick="openPay('${e.id}')">Thu tiền</button><button class="btn sm ghost" onclick="openDetail('${e.id}')">Chi tiết</button></div></div>`).join('');
+}
+
+/* ---------- Sao lưu / khôi phục ---------- */
+function backupJSON() {
+  const data = {app: 'laguna-acc', version: 1, exportedAt: new Date().toISOString(), contracts: contracts.map(c => { const {id, ...r} = c; return {id, ...r}; })};
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(data, (k, v) => (v && typeof v === 'object' && typeof v.toDate === 'function') ? v.toDate().toISOString() : v, 2)], {type: 'application/json'}));
+  a.download = `laguna-sao-luu-${today()}.json`; a.click(); toast(`Đã sao lưu ${contracts.length} hợp đồng`); }
+async function restoreJSON(inp) {
+  const f = inp.files[0]; inp.value = ''; if (!f) return;
+  try {
+    const d = JSON.parse(await f.text()); if (d.app !== 'laguna-acc' || !Array.isArray(d.contracts)) throw new Error('File không phải bản sao lưu của hệ thống này.');
+    const items = d.contracts.filter(c => c.id && c.partner); if (!items.length) throw new Error('File sao lưu không có hợp đồng nào.');
+    if (!confirm(`Khôi phục ${items.length} hợp đồng từ file sao lưu?\nHợp đồng trùng mã sẽ bị ghi đè bằng bản trong file, hợp đồng khác giữ nguyên.`)) return;
+    for (let i = 0; i < items.length; i += 400) { const b = db.batch();
+      items.slice(i, i + 400).forEach(({id, createdAt, updatedAt, ...r}) => b.set(db.collection('contracts').doc(id), {...r, updatedAt: firebase.firestore.FieldValue.serverTimestamp(), updatedBy: auth.currentUser?.email || ''}, {merge: false})); await b.commit(); }
+    toast(`Đã khôi phục ${items.length} hợp đồng`);
+  } catch (e) { alert('Không khôi phục được: ' + (e.message || e)); }
+}
+
 /* ---------- Soạn email nhắc đối tác ---------- */
 function mailPartner(id) { const c = contracts.find(x => x.id === id); if (!c) return;
   if (!c.partnerEmail) return toast('Chưa có email đối tác, hãy bấm Sửa hợp đồng để nhập');
@@ -1298,7 +1387,7 @@ function mailPartner(id) { const c = contracts.find(x => x.id === id); if (!c) r
 const dlgK = $('dlgK'); let kSel = 0, kItems = [];
 function openK() { $('kq').value = ''; renderK(); dlgK.showModal(); $('kq').focus(); }
 function renderK() { const q = norm($('kq').value);
-  const acts = [['Tổng quan', () => show('overview')], ['Danh sách hợp đồng', () => show('contracts')], ['Đối tác', () => show('partners')], ['Sổ thu tiền', () => show('ledger')],
+  const acts = [['Tổng quan', () => show('overview')], ['Danh sách hợp đồng', () => show('contracts')], ['Đối tác', () => show('partners')], ['Sổ thu tiền', () => show('ledger')], ['Lịch hạn cọc', () => show('calendar')], ['Sao lưu dữ liệu', backupJSON],
     ['Thêm hợp đồng', openNew], ['Ghi nhận thu tiền', () => openPay()], ['Tải hợp đồng lên', () => openUpload('contract')], ['Đối soát sao kê', () => openUpload('bank')]].map(([l, f]) => ({l, s: 'Lệnh', f}));
   const cs = contracts.map(c => ({l: `${c.partner} · ${c.contractNo}`, s: remain(c) ? 'Còn thiếu ' + short(remain(c)) : 'Đã đủ cọc', f: () => openDetail(c.id)}));
   kItems = [...cs, ...acts].filter(x => !q || norm(x.l).includes(q)).slice(0, 9); kSel = 0; drawK(); }
